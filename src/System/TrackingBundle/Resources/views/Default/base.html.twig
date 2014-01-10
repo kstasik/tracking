@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        
+        {% block stylesheets %}
+		  {% stylesheets '@bootstrap_less' combine=true %}
+		    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+		  {% endstylesheets %}
+		  <link href="{{ asset('/bundles/systemtracking/css/main.css') }}" rel="stylesheet" />
+		{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+    
+	    <div class="container">
+		<div class="navbar navbar-default" role="navigation">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	          <a class="navbar-brand" href="#">Tracking</a>
+	        </div>
+	        
+	        <div class="collapse navbar-collapse">
+	          <ul class="nav navbar-nav">
+	            <li{% if app.request.attributes.get('_route') == 'fos_user_security_login' %} class="active"{% endif %}><a href="{{ path('fos_user_security_login') }}">Login</a></li>
+	            <li{% if app.request.attributes.get('_route') == 'fos_user_registration_register' %} class="active"{% endif %}><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
+	            
+	            <li>
+	            	{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+		                <a href="{{ path('fos_user_security_logout') }}">
+		                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+		                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+		                </a>
+		            {% endif %}
+	            </li>
+	          </ul>
+	          
+	          <ul class="nav navbar-nav navbar-right">
+	            <li{% if app.request.get('_locale') == 'en' %} class="active"{% endif %}><a href="{{ localize_route('en') }}">English</a></li>
+	            <li{% if app.request.get('_locale') == 'pl' %} class="active"{% endif %}><a href="{{ localize_route('pl') }}">Polish</a></li>
+	          </ul>
+	        </div><!--/.nav-collapse -->
+	      </div>
+	    </div>
+	    
+	    
+	    
+        {% for type, messages in app.session.flashbag.all() %}
+            {% for key, message in messages %}
+                <div class="flash-{{ type }}">
+                    {{ message|trans({}, 'FOSUserBundle') }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+	    
+	    <div class="container">
+	        {% block body %}{% endblock %}
+	    </div>
+        
+        {% block javascripts %}
+		  {% javascripts '@jquery_js' '@bootstrap_js' filter='?yui_js' combine=true %}
+		     <script src="{{ asset_url }}"></script>
+		  {% endjavascripts %}
+		{% endblock %}
+    </body>
+</html>

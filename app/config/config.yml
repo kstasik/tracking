@@ -1,10 +1,11 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: assetic.yml }
 
 framework:
     #esi:             ~
-    #translator:      { fallback: "%locale%" }
+    translator:      { fallback: "%locale%" }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -33,7 +34,7 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ ]
+    bundles:        [ SystemTrackingBundle ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -72,3 +73,15 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+services:
+    system.language.kernel_request_listener:
+        class: System\UserBundle\EventListener\LanguageListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: setLocale }
+    twig.localized_route_extension:
+        class: System\UserBundle\Twig\LocalizedRouteExtension
+        tags:
+            - { name: twig.extension }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+        arguments: [@router]
