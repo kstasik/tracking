@@ -9,6 +9,7 @@
 		    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
 		  {% endstylesheets %}
 		  <link href="{{ asset('/bundles/systemtracking/css/main.css') }}" rel="stylesheet" />
+		  <link href="{{ asset('/bundles/systemtracking/css/flags.css') }}" rel="stylesheet" />
 		{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
@@ -28,22 +29,27 @@
 	        
 	        <div class="collapse navbar-collapse">
 	          <ul class="nav navbar-nav">
+	            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+	            <li>
+	                <a href="{{ path('system_tracking_trip') }}">
+	                	Trips
+	                </a>
+	            </li>
+	            <li>
+	                <a href="{{ path('fos_user_security_logout') }}">
+	                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+	                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+	                </a>
+	            </li>
+	            {% else %}
 	            <li{% if app.request.attributes.get('_route') == 'fos_user_security_login' %} class="active"{% endif %}><a href="{{ path('fos_user_security_login') }}">Login</a></li>
 	            <li{% if app.request.attributes.get('_route') == 'fos_user_registration_register' %} class="active"{% endif %}><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
-	            
-	            <li>
-	            	{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-		                <a href="{{ path('fos_user_security_logout') }}">
-		                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
-		                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
-		                </a>
-		            {% endif %}
-	            </li>
+	            {% endif %}
 	          </ul>
 	          
 	          <ul class="nav navbar-nav navbar-right">
-	            <li{% if app.request.get('_locale') == 'en' %} class="active"{% endif %}><a href="{{ localize_route('en') }}">English</a></li>
-	            <li{% if app.request.get('_locale') == 'pl' %} class="active"{% endif %}><a href="{{ localize_route('pl') }}">Polish</a></li>
+	            <li{% if app.request.get('_locale') == 'en' %} class="active"{% endif %}><a href="{{ localize_route('en') }}"><img src="blank.gif" class="flag flag-gb" alt="Czech Republic" /></a></li>
+	            <li{% if app.request.get('_locale') == 'pl' %} class="active"{% endif %}><a href="{{ localize_route('pl') }}"><img src="blank.gif" class="flag flag-pl" alt="Czech Republic" /></a></li>
 	          </ul>
 	        </div><!--/.nav-collapse -->
 	      </div>

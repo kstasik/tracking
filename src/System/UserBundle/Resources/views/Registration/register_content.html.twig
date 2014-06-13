@@ -1,9 +1,14 @@
 <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="post" class="fos_user_registration_register form-register" role="form">
+    {{ form_errors(form) }}
+    {{ form_errors(form.email) }}
+    {{ form_errors(form.plainPassword.first) }}
+    {{ form_errors(form.plainPassword.second) }}
     
     {{ form_widget(form.username, { 'attr': {'class': 'form-control form-first', 'placeholder':'form.username'|trans({}, 'FOSUserBundle') } }) }}
     {{ form_widget(form.email, { 'attr': {'class': 'form-control form-inner', 'placeholder':'form.email'|trans({}, 'FOSUserBundle')} }) }}
     {{ form_widget(form.plainPassword.first, { 'attr': {'class': 'form-control form-inner', 'placeholder':'form.password'|trans({}, 'FOSUserBundle')} }) }}
     {{ form_widget(form.plainPassword.second, { 'attr': {'class': 'form-control form-last', 'placeholder':'form.password_confirmation'|trans({}, 'FOSUserBundle')} }) }}
+    {{ form_row(form._token) }}
     
     <button class="btn btn-lg btn-primary btn-block" type="submit">{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}</button>
 </form>

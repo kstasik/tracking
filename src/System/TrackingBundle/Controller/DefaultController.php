@@ -8,7 +8,14 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-    	
         return $this->render('SystemTrackingBundle:Default:index.html.twig', array('name' => 'dupaaa'));
     }
+    
+    /**
+     * Redirect to default language directory
+     */
+	public function homeAction()
+    {
+        return $this->redirect($this->generateUrl('system_tracking_homepage'), 301);
+    }	
 }

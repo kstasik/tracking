@@ -60,6 +60,9 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+        dql:
+            datetime_functions:
+                datetime_sub: System\TrackingBundle\DQL\DatetimeSubFunction
         
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'

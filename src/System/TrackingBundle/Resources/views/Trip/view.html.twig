@@ -1,0 +1,38 @@
+{% extends "SystemTrackingBundle::Default/base.html.twig" %}
+
+{% block javascripts %}
+  {% javascripts '@jquery_js' '@bootstrap_js' '@SystemTrackingBundle/Resources/public/js/trip/map.js' filter='?yui_js' combine=true %}
+     <script src="{{ asset_url }}"></script>
+  {% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+<h2>
+	<a href="{{ path('system_tracking_trip') }}" class="btn btn-info"><i class="icon-white icon-chevron-left"></i> Go Back</a>
+	View Trip Details
+</h2>
+
+<table class="table table-striped">
+	<thead>
+		<th>Date Created</th>
+		<th>Latitude</th>
+		<th>Longitude</th>
+		<th>Speed</th>
+		<th>Altitude</th>
+		<th>Course</th>
+	</thead>
+	<tbody>
+		{% for position in positions %}
+		<tr>
+			<td>{{ position.getDateCreated()|date('Y-m-d H:i:s') }}</td>
+			<td>{{ position.getLongitude() }}</td>
+			<td>{{ position.getLatitude() }}</td>
+			<td>{{ position.getSpeed() }}</td>
+			<td>{{ position.getAltitude() }}</td>
+			<td>{{ position.getCourse() }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock body %}

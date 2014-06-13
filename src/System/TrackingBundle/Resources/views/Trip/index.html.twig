@@ -1,0 +1,24 @@
+{% extends "SystemTrackingBundle::Default/base.html.twig" %}
+
+{% block body %}
+
+<h2>List of Trips</h2>
+
+<table class="table table-striped">
+	<thead>
+		<th>ID</th>
+		<th>Date Created</th>
+		<th>Actions</th>
+	</thead>
+	<tbody>
+		{% for trip in trips %}
+		<tr>
+			<td>{{ trip.id }}</td>
+			<td>{{ trip.date_created|date('Y-m-d H:i:s') }}</td>
+			<td><a href="{{ path('system_tracking_trip_view', {id: trip.id}) }}" class="btn btn-primary btn-xs">View trip</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock body %}

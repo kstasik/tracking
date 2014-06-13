@@ -16,6 +16,11 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Position", mappedBy="user", cascade={"persist", "remove"})
+     */
+    protected $positions;
 
     public function __construct()
     {

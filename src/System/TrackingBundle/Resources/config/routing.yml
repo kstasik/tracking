@@ -1,3 +1,12 @@
 system_tracking_homepage:
     pattern:  /
     defaults: { _controller: SystemTrackingBundle:Default:index }
+    
+system_tracking_trip:
+    pattern:  /trips
+    defaults: { _controller: SystemTrackingBundle:Trip:index }
+    
+system_tracking_trip_view:
+    pattern:  /trips/view/{id}
+    defaults: { _controller: SystemTrackingBundle:Trip:view }
+    
