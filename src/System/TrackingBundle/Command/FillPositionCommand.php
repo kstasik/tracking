@@ -16,7 +16,7 @@ class FillPositionCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('s:position:fill')
+            ->setName('tracking:position:fill')
             ->setDescription('Create a user.');
     }
 
