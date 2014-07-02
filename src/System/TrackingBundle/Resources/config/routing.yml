@@ -10,3 +10,7 @@ system_tracking_trip_view:
     pattern:  /trips/view/{id}
     defaults: { _controller: SystemTrackingBundle:Trip:view }
     
+system_tracking_trip_track:
+    pattern:  /track
+    defaults: { _controller: SystemTrackingBundle:Trip:track }
+    

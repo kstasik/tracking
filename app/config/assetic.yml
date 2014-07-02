@@ -8,6 +8,8 @@ assetic:
     lessphp:
       file: %kernel.root_dir%/../vendor/leafo/lessphp/lessc.inc.php
       apply_to: "\.less$"
+    cssrewrite:
+      apply_to: "\.(css|less)$"
   assets:
     jquery_js:
         inputs:
@@ -31,4 +33,5 @@ assetic:
     bootstrap_less:
         inputs:
             - '%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less'
-        filters: [lessphp,cssembed]
+            - '%kernel.root_dir%/../src/System/TrackingBundle/Resources/public/css/main.less'
+        filters: [lessphp,cssembed,cssrewrite]

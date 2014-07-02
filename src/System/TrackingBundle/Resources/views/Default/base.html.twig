@@ -8,7 +8,6 @@
 		  {% stylesheets '@bootstrap_less' combine=true %}
 		    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
 		  {% endstylesheets %}
-		  <link href="{{ asset('/bundles/systemtracking/css/main.css') }}" rel="stylesheet" />
 		  <link href="{{ asset('/bundles/systemtracking/css/flags.css') }}" rel="stylesheet" />
 		{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
@@ -36,10 +35,21 @@
 	                </a>
 	            </li>
 	            <li>
-	                <a href="{{ path('fos_user_security_logout') }}">
-	                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
-	                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
-	                </a>
+	            
+	            	{% if tracking_state.getStatus() == constant('System\\TrackingBundle\\DependencyInjection\\TrackingState::STATUS_INACTIVE') %}
+	            	<p class="navbar-text text-error"><span class="glyphicon glyphicon-ban-circle"></span> Nothing received in 15m</p>
+	            	{% elseif tracking_state.getStatus() == constant('System\\TrackingBundle\\DependencyInjection\\TrackingState::STATUS_ACTIVE') %}
+	            	<p class="navbar-text text-success"><span class="glyphicon glyphicon-ok-circle"></span> Receiving data</p>
+	            	{% elseif tracking_state.getStatus() == constant('System\\TrackingBundle\\DependencyInjection\\TrackingState::STATUS_DELAYED') %}
+	            	<p class="navbar-text text-warning"><span class="glyphicon glyphicon-exclamation-sign"></span> Nothing received in 5m</p>
+	            	{% else %}
+	            	<p class="navbar-text"><span class="glyphicon glyphicon-time"></span> Not installed</p>
+	            	{% endif %}
+
+<!-- 
+ -->
+	            
+	            	
 	            </li>
 	            {% else %}
 	            <li{% if app.request.attributes.get('_route') == 'fos_user_security_login' %} class="active"{% endif %}><a href="{{ path('fos_user_security_login') }}">Login</a></li>
@@ -48,14 +58,24 @@
 	          </ul>
 	          
 	          <ul class="nav navbar-nav navbar-right">
+	            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+	            <li>
+	                <p class="navbar-text">{{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}</p>
+	            </li>
+	            <li>
+	                <a href="{{ path('fos_user_security_logout') }}">
+	                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+	                </a>
+	            </li>
+	          
+	            {% endif %}
+	          
 	            <li{% if app.request.get('_locale') == 'en' %} class="active"{% endif %}><a href="{{ localize_route('en') }}"><img src="blank.gif" class="flag flag-gb" alt="Czech Republic" /></a></li>
 	            <li{% if app.request.get('_locale') == 'pl' %} class="active"{% endif %}><a href="{{ localize_route('pl') }}"><img src="blank.gif" class="flag flag-pl" alt="Czech Republic" /></a></li>
 	          </ul>
 	        </div><!--/.nav-collapse -->
 	      </div>
 	    </div>
-	    
-	    
 	    
         {% for type, messages in app.session.flashbag.all() %}
             {% for key, message in messages %}

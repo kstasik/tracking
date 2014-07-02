@@ -29,11 +29,13 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        tracking_state: "@system.twig.api.state"
 
 # Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"
-    use_controller: false
+    use_controller: true
     bundles:        [ SystemTrackingBundle ]
     #java: /usr/bin/java
     filters:

@@ -6,6 +6,14 @@ use Doctrine\ORM\EntityRepository;
 class PositionRepository extends EntityRepository{
     const TRIPS_INTERVAL = 'INTERVAL 30 MINUTE';
     
+    public function getLastPosition(User $user){
+        $query = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a WHERE a.user = :user ORDER BY a.date_created DESC')
+            ->setMaxResults(1)
+            ->setParameter('user', $user->getId());
+        
+        return $query->getSingleResult();
+    }
+    
     public function getTripCollection(User $user){
         return $this->getEntityManager()->createQuery('SELECT a.id, a.date_created '.
             'FROM \System\TrackingBundle\Entity\Position a '.

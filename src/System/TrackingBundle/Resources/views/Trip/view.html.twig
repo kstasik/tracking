@@ -1,6 +1,7 @@
 {% extends "SystemTrackingBundle::Default/base.html.twig" %}
 
 {% block javascripts %}
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
   {% javascripts '@jquery_js' '@bootstrap_js' '@SystemTrackingBundle/Resources/public/js/trip/map.js' filter='?yui_js' combine=true %}
      <script src="{{ asset_url }}"></script>
   {% endjavascripts %}
@@ -11,6 +12,8 @@
 	<a href="{{ path('system_tracking_trip') }}" class="btn btn-info"><i class="icon-white icon-chevron-left"></i> Go Back</a>
 	View Trip Details
 </h2>
+
+<div id="tracking-route" style="width: 100%; height: 300px;"></div>
 
 <table class="table table-striped">
 	<thead>
@@ -23,10 +26,10 @@
 	</thead>
 	<tbody>
 		{% for position in positions %}
-		<tr>
+		<tr data-lng="{{ position.getLongitude() }}" data-lat="{{ position.getLatitude() }}">
 			<td>{{ position.getDateCreated()|date('Y-m-d H:i:s') }}</td>
-			<td>{{ position.getLongitude() }}</td>
 			<td>{{ position.getLatitude() }}</td>
+			<td>{{ position.getLongitude() }}</td>
 			<td>{{ position.getSpeed() }}</td>
 			<td>{{ position.getAltitude() }}</td>
 			<td>{{ position.getCourse() }}</td>
@@ -34,5 +37,4 @@
 		{% endfor %}
 	</tbody>
 </table>
-
 {% endblock body %}

@@ -2,6 +2,6 @@ parameters:
 #    system_tracking.example.class: System\TrackingBundle\Example
 
 services:
-#    system_tracking.example:
-#        class: %system_tracking.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    system.twig.api.state:
+        class: System\TrackingBundle\DependencyInjection\TrackingState
+        arguments: ["@doctrine.orm.entity_manager", "@security.context"]
