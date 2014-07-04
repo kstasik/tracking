@@ -32,15 +32,15 @@ class FillPositionCommand extends ContainerAwareCommand
         
         $em = $this->getContainer()->get('doctrine')->getManager();
         
-        $user = $em->getRepository('SystemTrackingBundle:User')->find(1);
+        $object = $em->getRepository('SystemTrackingBundle:Object')->find(1);
 
-        $output->writeln(sprintf('adding positions for <comment>%s</comment>', $user->getUsername()));
+        $output->writeln(sprintf('adding positions for <comment>%s</comment>', $object->getUser()->getUsername()));
         
         while($p = $stmt->fetch(\PDO::FETCH_ASSOC)){
             $object = new Position;
             
             $object
-                ->setUser($user)
+                ->setObject($object)
                 ->setLatitude($p['lat'])
                 ->setLongitude($p['lng'])
                 ->setDateCreated($p['date_created'] ? new \DateTime(date('Y-m-d H:i:s', $p['date_created'])) : null)

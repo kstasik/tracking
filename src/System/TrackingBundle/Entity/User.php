@@ -17,31 +17,25 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Position", mappedBy="user", cascade={"persist", "remove"})
-     */
-    protected $positions;
 
     /**
-     * @ORM\Column(length=40, unique=true)
+     * @ORM\ManyToMany(targetEntity="Object", mappedBy="users")
+     * @ORM\JoinTable(name="user_to_object",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="object_id", referencedColumnName="id")}
+     *      )
      */
-    protected $api_key;
+    protected $objects;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Device", mappedBy="user", cascade={"persist", "remove"})
+     */
+    protected $devices;
 
     public function __construct()
     {
         parent::__construct();
         // your own logic
-    }
-    
-    /**
-     * @ORM\PreUpdate
-     */
-    public function preUpdate(){
-        // generate api key
-        if(!$this->getApiKey()){
-            $this->setApiKey(md5(uniqid('', true)));
-        }
     }
 
     /**
@@ -55,58 +49,68 @@ class User extends BaseUser
     }
 
     /**
-     * Set api_key
+     * Add objects
      *
-     * @param string $apiKey
+     * @param \System\TrackingBundle\Entity\Object $objects
      * @return User
      */
-    public function setApiKey($apiKey)
+    public function addObject(\System\TrackingBundle\Entity\Object $objects)
     {
-        $this->api_key = $apiKey;
+        $this->objects[] = $objects;
 
         return $this;
     }
 
     /**
-     * Get api_key
+     * Remove objects
      *
-     * @return string 
+     * @param \System\TrackingBundle\Entity\Object $objects
      */
-    public function getApiKey()
+    public function removeObject(\System\TrackingBundle\Entity\Object $objects)
     {
-        return $this->api_key;
+        $this->objects->removeElement($objects);
     }
 
     /**
-     * Add positions
-     *
-     * @param \System\TrackingBundle\Entity\Position $positions
-     * @return User
-     */
-    public function addPosition(\System\TrackingBundle\Entity\Position $positions)
-    {
-        $this->positions[] = $positions;
-
-        return $this;
-    }
-
-    /**
-     * Remove positions
-     *
-     * @param \System\TrackingBundle\Entity\Position $positions
-     */
-    public function removePosition(\System\TrackingBundle\Entity\Position $positions)
-    {
-        $this->positions->removeElement($positions);
-    }
-
-    /**
-     * Get positions
+     * Get objects
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getPositions()
+    public function getObjects()
     {
-        return $this->positions;
+        return $this->objects;
+    }
+
+    /**
+     * Add devices
+     *
+     * @param \System\TrackingBundle\Entity\Device $devices
+     * @return User
+     */
+    public function addDevice(\System\TrackingBundle\Entity\Device $devices)
+    {
+        $this->devices[] = $devices;
+
+        return $this;
+    }
+
+    /**
+     * Remove devices
+     *
+     * @param \System\TrackingBundle\Entity\Device $devices
+     */
+    public function removeDevice(\System\TrackingBundle\Entity\Device $devices)
+    {
+        $this->devices->removeElement($devices);
+    }
+
+    /**
+     * Get devices
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDevices()
+    {
+        return $this->devices;
     }
 }

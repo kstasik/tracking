@@ -6,7 +6,7 @@ use FOS\UserBundle\Entity\User as BaseUser;
 
 /**
  * @ORM\Entity(repositoryClass="System\TrackingBundle\Entity\PositionRepository")
- * @ORM\Table(name="user_position")
+ * @ORM\Table(name="object_position")
  */
 class Position
 {
@@ -18,10 +18,10 @@ class Position
     protected $id;
     
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="positions")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Object", inversedBy="positions")
+     * @ORM\JoinColumn(name="object_id", referencedColumnName="id")
      */
-    protected $user;
+    protected $object;
 
     /**
      * @ORM\Column(type="decimal", precision=14, scale=6)
@@ -253,29 +253,6 @@ class Position
     }
 
     /**
-     * Set user
-     *
-     * @param \System\TrackingBundle\Entity\User $user
-     * @return Position
-     */
-    public function setUser(\System\TrackingBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \System\TrackingBundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
      * Set course
      *
      * @param float $course
@@ -296,5 +273,28 @@ class Position
     public function getCourse()
     {
         return $this->course;
+    }
+
+    /**
+     * Set object
+     *
+     * @param \System\TrackingBundle\Entity\Object $object
+     * @return Position
+     */
+    public function setObject(\System\TrackingBundle\Entity\Object $object = null)
+    {
+        $this->object = $object;
+
+        return $this;
+    }
+
+    /**
+     * Get object
+     *
+     * @return \System\TrackingBundle\Entity\Object 
+     */
+    public function getObject()
+    {
+        return $this->object;
     }
 }

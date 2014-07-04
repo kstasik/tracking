@@ -1,0 +1,24 @@
+{% extends "SystemTrackingBundle::Default/base.html.twig" %}
+
+{% block body %}
+
+<h2>List of Tracked Objects</h2>
+
+<table class="table table-striped">
+	<thead>
+		<th>ID</th>
+		<th>Name</th>
+		<th>Actions</th>
+	</thead>
+	<tbody>
+		{% for object in objects %}
+		<tr>
+			<td>{{ object.id }}</td>
+			<td>{{ object.name }}</td>
+			<td><a href="{{ path('system_tracking_trip', {id: object.id}) }}" class="btn btn-primary btn-xs">View trips</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock body %}
