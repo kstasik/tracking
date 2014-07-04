@@ -6,6 +6,10 @@ system_tracking_object:
     pattern:  /objects
     defaults: { _controller: SystemTrackingBundle:Object:index }
     
+system_tracking_object_new:
+    pattern:  /objects/new
+    defaults: { _controller: SystemTrackingBundle:Object:new }
+    
 system_tracking_trip:
     pattern:  /trips/{id}
     defaults: { _controller: SystemTrackingBundle:Trip:index }

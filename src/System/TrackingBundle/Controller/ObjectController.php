@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use System\TrackingBundle\Entity\Position;
+use System\TrackingBundle\Entity\Object;
 
 class ObjectController extends Controller
 {
@@ -19,6 +20,40 @@ class ObjectController extends Controller
         $em = $this->getDoctrine()->getRepository('SystemTrackingBundle:Object');
 
         return $this->render('SystemTrackingBundle:Object:index.html.twig', array('objects' => $em->getObjectCollection($user)));
+    }
+
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function newAction(Request $request){
+        $user = $this->get('security.context')->getToken()->getUser();
+        
+        // create a task and give it some dummy data for this example
+        $object = new Object();
+        $object->addUser($user);
+        
+        $form = $this->createFormBuilder($object)
+            ->add('name', 'text')
+            ->add('api_key', 'text')
+            ->add('save', 'submit')
+            ->getForm();
+        
+        if($request->isMethod('POST')){
+            $form->submit($request);
+            
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                
+                $em->persist($object);
+                $em->flush();
+                
+                return $this->redirect($this->generateUrl('system_tracking_object'));
+            }
+        }
+        
+        return $this->render('SystemTrackingBundle:Object:new.html.twig', array(
+                        'form' => $form->createView(),
+        ));
     }
     
     /**

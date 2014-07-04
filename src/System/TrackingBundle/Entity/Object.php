@@ -105,7 +105,7 @@ class Object
     }
     
     /**
-     * @ORM\PreUpdate
+     * @ORM\PrePersist
      */
     public function preUpdate(){
         // generate api key

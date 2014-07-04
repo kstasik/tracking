@@ -2,6 +2,7 @@
 namespace System\TrackingBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 
 class PositionRepository extends EntityRepository{
     const TRIPS_INTERVAL = 'INTERVAL 30 MINUTE';
@@ -11,7 +12,12 @@ class PositionRepository extends EntityRepository{
             ->setMaxResults(1)
             ->setParameter('user', $user->getId());
         
-        return $query->getSingleResult();
+        try{
+            return $query->getSingleResult();
+        }
+        catch(NoResultException $e){
+            return null;
+        }        
     }
     
     public function getTripCollection(Object $object){
