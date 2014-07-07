@@ -1,0 +1,5 @@
+rest_device:
+    type: rest
+    prefix: /v1
+    resource: "System\TrackingBundle\Controller\Rest\DeviceController"
+    name_prefix:  api_1_
