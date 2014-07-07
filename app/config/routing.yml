@@ -2,6 +2,11 @@ default:
     pattern:  /
     defaults: { _controller: SystemTrackingBundle:Default:home }
 
+system_tracking_rest:
+    prefix: /api
+    type: rest
+    resource: "@SystemTrackingBundle/Resources/config/routing_rest.yml"
+
 default_locale_routing:
     resource: "routing_default.yml"
     prefix:   /{_locale}

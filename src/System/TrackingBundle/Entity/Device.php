@@ -2,10 +2,15 @@
 namespace System\TrackingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * @ORM\Entity(repositoryClass="System\TrackingBundle\Entity\DeviceRepository")
  * @ORM\Table(name="device")
+ * @ORM\HasLifecycleCallbacks()
+ * 
+ * @ExclusionPolicy("all")
  */
 class Device
 {
@@ -30,6 +35,24 @@ class Device
      *      )
      */
     private $objects;
+
+    /**
+     * @ORM\Column(length=40)
+     */
+    private $system;
+
+    /**
+     * @ORM\Column(type="text")
+     * @Expose
+     */
+    private $reg_id;
+
+    /**
+     * @ORM\Column(length=40, unique=true)
+     * @Expose
+     */
+    protected $api_key;
+    
     /**
      * Constructor
      */
@@ -46,6 +69,16 @@ class Device
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function preUpdate(){
+        // generate api key
+        if(!$this->getApiKey()){
+            $this->setApiKey(md5(uniqid('', true)));
+        }
     }
 
     /**
@@ -102,5 +135,74 @@ class Device
     public function getObjects()
     {
         return $this->objects;
+    }
+
+    /**
+     * Set system
+     *
+     * @param string $system
+     * @return Device
+     */
+    public function setSystem($system)
+    {
+        $this->system = $system;
+
+        return $this;
+    }
+
+    /**
+     * Get system
+     *
+     * @return string 
+     */
+    public function getSystem()
+    {
+        return $this->system;
+    }
+
+    /**
+     * Set reg_id
+     *
+     * @param string $regId
+     * @return Device
+     */
+    public function setRegId($regId)
+    {
+        $this->reg_id = $regId;
+
+        return $this;
+    }
+
+    /**
+     * Get reg_id
+     *
+     * @return string 
+     */
+    public function getRegId()
+    {
+        return $this->reg_id;
+    }
+
+    /**
+     * Set api_key
+     *
+     * @param string $apiKey
+     * @return Device
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->api_key = $apiKey;
+
+        return $this;
+    }
+
+    /**
+     * Get api_key
+     *
+     * @return string 
+     */
+    public function getApiKey()
+    {
+        return $this->api_key;
     }
 }
