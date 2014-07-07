@@ -77,14 +77,29 @@ class ObjectController extends Controller
             $attr = array('date','lat','lng','speed','alt','course');
             $data = array();
             
-            for($i = 0; $i < count($post['date']); $i++){
+            if(count($post['date']) == 0){
+                return new Response('-3');
+            }
+            
+            for($i = count($post['date'])-1; $i >= 0; $i--){
                 foreach($attr as $key){
                     if(!isset($post[$key][$i])){
                         return new Response('-1');
                     }
                 }
                 
-                preg_match_all('/([0-9]{2})/i', $post['date'][$i], $m);
+                // fix stamp if date is empty
+                $stamp = str_pad($post['date'][$i], 6+8, '0', STR_PAD_LEFT);
+                
+                preg_match_all('/([0-9]{2})/i', $stamp, $m);
+                
+                // date not received - set currant day
+                if($m[0][1] == 0 && $m[0][0] == 0 && $m[0][2] == 0){
+                    $m[0][1] = date('m');
+                    $m[0][0] = date('d');
+                    $m[0][2] = date('Y');
+                }
+                
                 $time = mktime( $m[0][3], $m[0][4], $m[0][5], $m[0][1], $m[0][0], $m[0][2] );
                 $sat  = new \DateTime();
                 $sat->setTimestamp($time);
@@ -97,9 +112,9 @@ class ObjectController extends Controller
                     ->setLongitude($post['lng'][$i])
                     ->setDateCreated(new \DateTime())
                     ->setDateSatellite($sat)
-                    ->setSpeed($post['speed'][$i])
+                    ->setSpeed($post['speed'][$i]/100)
                     ->setAltitude($post['alt'][$i])
-                    ->setCourse($post['course'][$i]);
+                    ->setCourse($post['course'][$i]/100);
                 
                 $em->persist($position);
                 $em->flush();

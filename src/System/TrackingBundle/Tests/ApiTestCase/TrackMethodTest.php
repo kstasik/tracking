@@ -7,12 +7,12 @@ class TrackMethodTest extends WebTestCase
 {
     private $positions = array(
     	array(
-    	   'date' => '20131118092109',
+    	   'date' => '014353200', //'6071416165100',
     	   'lat' => 50.0636422,
     	   'lng' => 19.9371549,
     	   'speed' => 10.960000,
-    	   'alt' => 210.700000,
-    	   'course' => 144.610000       
+    	   'alt' => -3390.00,
+    	   'course' => 3214       
         )
                     
     );
