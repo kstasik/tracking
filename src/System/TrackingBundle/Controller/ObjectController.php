@@ -71,6 +71,9 @@ class ObjectController extends Controller
             return new Response('-2');
         }
         
+        // last request
+        file_put_contents($this->get('kernel')->getCacheDir().'/lastposition.log', print_r($_SERVER, true).PHP_EOL.print_r($request->request->all(), true));
+        
         // process request
         if ($request->getMethod() == 'POST') {
             $post = $request->request->all();
@@ -112,6 +115,7 @@ class ObjectController extends Controller
                     ->setLongitude($post['lng'][$i])
                     ->setDateCreated(new \DateTime())
                     ->setDateSatellite($sat)
+                    ->setDateFixed($sat)
                     ->setSpeed($post['speed'][$i]/100)
                     ->setAltitude($post['alt'][$i])
                     ->setCourse($post['course'][$i]/100);

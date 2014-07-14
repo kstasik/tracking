@@ -14,7 +14,7 @@
 		{% for trip in trips %}
 		<tr>
 			<td>{{ trip.id }}</td>
-			<td>{{ trip.date_created|date('Y-m-d H:i:s') }}</td>
+			<td>{{ trip.date_fixed|date('Y-m-d H:i:s') }}</td>
 			<td><a href="{{ path('system_tracking_trip_view', {id: trip.id}) }}" class="btn btn-primary btn-xs">View trip</a></td>
 		</tr>
 		{% endfor %}

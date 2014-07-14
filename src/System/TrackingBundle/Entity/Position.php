@@ -37,6 +37,11 @@ class Position
      * @ORM\Column(type="datetime")
      */
     protected $date_created;
+    
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $date_fixed;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -49,7 +54,7 @@ class Position
     protected $speed;
 
     /**
-     * @ORM\Column(type="decimal", precision=14, scale=6)
+     * @ORM\Column(type="decimal", precision=14, scale=6, nullable=true)
      */
     protected $altitude;
 
@@ -296,5 +301,28 @@ class Position
     public function getObject()
     {
         return $this->object;
+    }
+
+    /**
+     * Set date_fixed
+     *
+     * @param \DateTime $dateFixed
+     * @return Position
+     */
+    public function setDateFixed($dateFixed)
+    {
+        $this->date_fixed = $dateFixed;
+
+        return $this;
+    }
+
+    /**
+     * Get date_fixed
+     *
+     * @return \DateTime 
+     */
+    public function getDateFixed()
+    {
+        return $this->date_fixed;
     }
 }

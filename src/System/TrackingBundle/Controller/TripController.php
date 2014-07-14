@@ -43,7 +43,6 @@ class TripController extends Controller
             throw $this->createNotFoundException('The trip doesn\'t exist');
         }
         
-        
         if(!$trip->getObject()->getUsers()->contains($user)){
             throw $this->createNotFoundException('You can\'t view someone elses objects!');
         }
