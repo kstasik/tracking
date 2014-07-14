@@ -8,7 +8,7 @@ class PositionRepository extends EntityRepository{
     const TRIPS_INTERVAL = 'INTERVAL 30 MINUTE';
     
     public function getLastPosition(User $user){
-        $query = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a, \System\TrackingBundle\Entity\Object o LEFT JOIN o.users u WHERE o.id = a.object AND u.id = :user ORDER BY a.date_fixed DESC')
+        $query = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a, \System\TrackingBundle\Entity\Object o LEFT JOIN o.users u WHERE o.id = a.object AND u.id = :user ORDER BY a.date_created DESC')
             ->setMaxResults(1)
             ->setParameter('user', $user->getId());
         
