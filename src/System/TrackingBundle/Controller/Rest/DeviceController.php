@@ -24,14 +24,22 @@ class DeviceController extends FOSRestController
                 $request->request->all()
             );
         
-            $routeOptions = array(
-                'id' => $device->getId(),
-                '_format' => $request->get('_format')
-            );
-        
             return $device;
         } catch (InvalidFormException $exception) {
             return $exception->getForm();
         }
+    }
+    
+    /**
+     * @Annotations\View(templateVar="device")
+     */
+    public function getDeviceAction($api_key){
+        $device = $this->container->get('system_tracking.device.handler')->getByApiKey($api_key);
+        
+        if(!$device){
+            throw new NotFoundHttpException(sprintf('The device with api_key \'%s\' was not found.',$api_key));
+        }
+        
+        return $device;
     }
 }

@@ -33,6 +33,7 @@ class Device
      *      joinColumns={@ORM\JoinColumn(name="device_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="object_id", referencedColumnName="id")}
      *      )
+     * @Expose
      */
     private $objects;
 

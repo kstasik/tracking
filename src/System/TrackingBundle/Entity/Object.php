@@ -2,11 +2,14 @@
 namespace System\TrackingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * @ORM\Entity(repositoryClass="System\TrackingBundle\Entity\ObjectRepository")
  * @ORM\Table(name="object")
  * @ORM\HasLifecycleCallbacks()
+ * @ExclusionPolicy("all")
  */
 class Object
 {
@@ -14,11 +17,13 @@ class Object
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     protected $id;
     
     /**
      * @ORM\Column(length=255)
+     * @Expose
      */
     protected $name;
 
@@ -40,6 +45,7 @@ class Object
      * @ORM\Column(length=40, unique=true)
      */
     protected $api_key;
+    
     /**
      * Constructor
      */

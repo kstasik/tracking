@@ -28,6 +28,10 @@ class DeviceHandler
         $this->se = $se;
     }
     
+    public function getByApiKey($api_key){
+        return $this->repository->findOneBy(array('api_key' => $api_key));
+    }
+    
     /**
      * Get a Page.
      *
