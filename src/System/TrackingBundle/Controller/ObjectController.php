@@ -91,8 +91,20 @@ class ObjectController extends Controller
                     }
                 }
                 
-                // fix stamp if date is empty
-                $stamp = str_pad($post['date'][$i], 6+8, '0', STR_PAD_LEFT);
+                // TODO: refactoring
+                
+                // 140714 9373100
+                //  6071416165100
+                //      0 9363200
+
+                // fix stamp from tracking device
+                preg_match('/^([0-9]{3,4})?('.date('y').'|0)?([0-9]{7,8})$/', $post['date'][$i], $m);
+                
+                $date = str_pad($m[1].$m[2],6, '0', STR_PAD_LEFT);
+                $time = str_pad($m[3],8, '0', STR_PAD_LEFT);
+                
+                // fixed stamp
+                $stamp = $date.$time;
                 
                 preg_match_all('/([0-9]{2})/i', $stamp, $m);
                 
@@ -103,7 +115,7 @@ class ObjectController extends Controller
                     $m[0][2] = date('Y');
                 }
                 
-                $time = mktime( $m[0][3], $m[0][4], $m[0][5], $m[0][1], $m[0][0], $m[0][2] );
+                $time = gmmktime( $m[0][3], $m[0][4], $m[0][5], $m[0][1], $m[0][0], $m[0][2] );
                 $sat  = new \DateTime();
                 $sat->setTimestamp($time);
                 
@@ -117,8 +129,8 @@ class ObjectController extends Controller
                     ->setDateSatellite($sat)
                     ->setDateFixed($sat)
                     ->setSpeed($post['speed'][$i]/100)
-                    ->setAltitude($post['alt'][$i])
-                    ->setCourse($post['course'][$i]/100);
+                    ->setAltitude($post['alt'][$i] == '999999999' ? null : $post['alt'][$i])
+                    ->setCourse($post['course'][$i] == '999999999' ? null : $post['course'][$i]/100);
                 
                 $em->persist($position);
                 $em->flush();
