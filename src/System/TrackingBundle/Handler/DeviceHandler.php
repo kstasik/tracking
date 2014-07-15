@@ -28,10 +28,6 @@ class DeviceHandler
         $this->se = $se;
     }
     
-    public function getByApiKey($api_key){
-        return $this->repository->findOneBy(array('api_key' => $api_key));
-    }
-    
     /**
      * Get a Page.
      *
@@ -42,8 +38,16 @@ class DeviceHandler
         return $this->repository->find($id);
     }
     
+    public function getByApiKey($api_key){
+        return $this->repository->findOneBy(array('api_key' => $api_key));
+    }
+    
     public function post(array $parameters){
         try{
+            if(!isset($parameters['username']) || !isset($parameters['password'])){
+                throw new ApiSecurityException('Please provide username and password!');
+            }
+            
             $user = $this->um->loadUserByUsername($parameters['username']);
             $encoder = $this->se->getEncoder($user);
             

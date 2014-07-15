@@ -29,15 +29,36 @@ class DeviceController extends FOSRestController
             return $exception->getForm();
         }
     }
+
+    /**
+     * @Annotations\View(templateVar="device")
+     */
+    public function getDevicesCurrentAction(Request $request){
+        $user = $this->get('security.context')->getToken()->getUser();
+        
+        $device = $this->container->get('system_tracking.device.handler')->getByApiKey($request->get('api_key'));
+        
+        if(!$device){
+            throw new NotFoundHttpException(sprintf('Device attached to this api key not found.'));
+        }
+        
+        return $device;
+    }
     
     /**
      * @Annotations\View(templateVar="device")
      */
-    public function getDeviceAction($api_key){
-        $device = $this->container->get('system_tracking.device.handler')->getByApiKey($api_key);
+    public function getDeviceAction($id, Request $request){
+        $user = $this->get('security.context')->getToken()->getUser();
+        
+        $device = $this->container->get('system_tracking.device.handler')->get($id);
         
         if(!$device){
-            throw new NotFoundHttpException(sprintf('The device with api_key \'%s\' was not found.',$api_key));
+            throw new NotFoundHttpException(sprintf('The device with id \'%s\' was not found.',$id));
+        }
+
+        if($device->getUser() != $user){
+            throw $this->createNotFoundException('You can\'t view someone elses devices!');
         }
         
         return $device;

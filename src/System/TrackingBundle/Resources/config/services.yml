@@ -1,5 +1,6 @@
 parameters:
     system_tracking.device.handler.class: System\TrackingBundle\Handler\DeviceHandler
+    system_tracking.object.handler.class: System\TrackingBundle\Handler\ObjectHandler
 
 services:
     system.twig.api.state:
@@ -8,3 +9,6 @@ services:
     system_tracking.device.handler:
         class: %system_tracking.device.handler.class%
         arguments: ["@doctrine.orm.entity_manager", "System\TrackingBundle\Entity\Device", "@form.factory", "@fos_user.user_manager", "@security.encoder_factory"]
+    system_tracking.object.handler:
+        class: %system_tracking.object.handler.class%
+        arguments: ["@doctrine.orm.entity_manager", "System\TrackingBundle\Entity\Object"]

@@ -3,3 +3,15 @@ rest_device:
     prefix: /v1
     resource: "System\TrackingBundle\Controller\Rest\DeviceController"
     name_prefix:  api_1_
+
+rest_message:
+    type: rest
+    prefix: /v1
+    resource: "System\TrackingBundle\Controller\Rest\MessageController"
+    name_prefix:  api_1_
+    
+rest_object:
+    type: rest
+    prefix: /v1
+    resource: "System\TrackingBundle\Controller\Rest\ObjectController"
+    name_prefix:  api_1_

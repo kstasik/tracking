@@ -27,7 +27,7 @@
 	<tbody>
 		{% for position in positions %}
 		<tr data-lng="{{ position.getLongitude() }}" data-lat="{{ position.getLatitude() }}">
-			<td>{{ position.getDateFixed()|date('Y-m-d H:i:s') }}</td>
+			<td>{{ position.getDateFixed()|date('Y-m-d H:i:s') }} <small>({{ position.getDateCreated()|date('H:i:s') }})</small></td>
 			<td>{{ position.getLatitude() }}</td>
 			<td>{{ position.getLongitude() }}</td>
 			<td>{{ position.getSpeed() }}</td>

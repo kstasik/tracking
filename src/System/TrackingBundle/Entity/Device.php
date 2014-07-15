@@ -18,6 +18,7 @@ class Device
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     protected $id;
     
@@ -53,6 +54,11 @@ class Device
      * @Expose
      */
     protected $api_key;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="device", cascade={"persist", "remove"})
+     */
+    protected $messages;
     
     /**
      * Constructor

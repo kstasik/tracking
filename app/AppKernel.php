@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            new RMS\PushNotificationsBundle\RMSPushNotificationsBundle(),
                         
             new System\TrackingBundle\SystemTrackingBundle(),
             new System\UserBundle\SystemUserBundle(),

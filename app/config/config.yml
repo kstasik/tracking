@@ -91,6 +91,15 @@ services:
             - { name: twig.extension }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
         arguments: [@router]
+        
+    device_apikey_user_provider:
+        class:     System\TrackingBundle\Security\User\DeviceApiKeyUserProvider
+        arguments: ["@fos_user.user_manager", "@doctrine.orm.entity_manager"]
+        
+    device_apikey_authenticator:
+        class:     System\TrackingBundle\Security\DeviceApiKeyAuthenticator
+        arguments: ["@device_apikey_user_provider", @security.http_utils]
+    
 
 sensio_framework_extra:
     view:
@@ -98,3 +107,8 @@ sensio_framework_extra:
 fos_rest:
     view:
         view_response_listener: true
+        
+rms_push_notifications:
+  android:
+      gcm:
+          api_key: AIzaSyD5jD6cUYFtgW7p1rdAV3usTLlq8QBq3r4

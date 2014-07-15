@@ -7,6 +7,11 @@ security:
         FOS\UserBundle\Model\UserInterface: sha512
 
     firewalls:
+        api:
+            pattern: ^/api(?!\/v1\/devices\.json)
+            stateless: true
+            simple_preauth:
+                authenticator: device_apikey_authenticator
         main:
             pattern: ^/
             form_login:

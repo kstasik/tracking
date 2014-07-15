@@ -2,6 +2,7 @@
 namespace System\TrackingBundle\DependencyInjection;
 use System\TrackingBundle\Entity\User;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use System\TrackingBundle\Entity\Position;
 
 class TrackingState{    
     const STATUS_NOT_INSTALLED  = 1;
@@ -28,28 +29,36 @@ class TrackingState{
         return $this->securityContext;
     }
     
-    public function getStatus(){
-        if(!$this->status){
-            $user = $this->getSecurityContext()->getToken()->getUser();
-            $repo = $this->getEntityManager()->getRepository('SystemTrackingBundle:Position');
-            
-            $position = $repo->getLastPosition($user);
-            if(!$position){
-                $this->status = self::STATUS_NOT_INSTALLED;
+    public function getLastPosition(){
+        $user = $this->getSecurityContext()->getToken()->getUser();
+        $repo = $this->getEntityManager()->getRepository('SystemTrackingBundle:Position');
+        
+        return $repo->getLastUserPosition($user);
+    }
+
+    public function getStatusUsingPosition(Position $position){
+       $position = $this->getLastPosition();
+
+       if($position){
+            $time = $position->getDateCreated()->getTimestamp();
+        
+            if( $time > time()-60*5 ){
+                return self::STATUS_ACTIVE;
+            }
+            elseif( $time > time()-60*15 ){
+                return self::STATUS_DELAYED;
             }
             else{
-                $time = $position->getDateCreated()->getTimestamp();
-                
-                if( $time > time()-60*5 ){
-                    $this->status = self::STATUS_ACTIVE;
-                }
-                elseif( $time > time()-60*15 ){
-                    $this->status = self::STATUS_DELAYED;
-                }
-                else{
-                    $this->status = self::STATUS_INACTIVE;
-                }
+                return self::STATUS_INACTIVE;
             }
+        }
+
+        return self::STATUS_NOT_INSTALLED;
+    }
+    
+    public function getStatus(){
+        if(!$this->status){
+            $this->status = $this->getStatusUsingPosition($this->getLastPosition());
         }
         
         return $this->status;
