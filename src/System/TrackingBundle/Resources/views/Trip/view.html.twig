@@ -1,6 +1,9 @@
 {% extends "SystemTrackingBundle::Default/base.html.twig" %}
 
 {% block javascripts %}
+  <script type="text/javascript">
+      var assetsBaseDir = "{{ asset('bundles/systemtracking/') }}";
+  </script>
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
   {% javascripts '@jquery_js' '@bootstrap_js' '@SystemTrackingBundle/Resources/public/js/trip/map.js' filter='?yui_js' combine=true %}
      <script src="{{ asset_url }}"></script>
