@@ -103,9 +103,7 @@ class PositionRepository extends EntityRepository{
         }       
     }
     
-    public function classify(Position $position){
-        $em = $this->getEntityManager();
-        
+    public function getSurroundings(Position $position){
         $before = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a WHERE a.date_fixed <= :date AND a.id != :position AND a.object = :object ORDER BY a.date_fixed DESC')
             ->setParameter('object', $position->getObject()->getId())
             ->setParameter('date', $position->getDateFixed())
@@ -120,11 +118,17 @@ class PositionRepository extends EntityRepository{
             ->setMaxResults(10)
             ->getResult(Query::HYDRATE_OBJECT);
         
-        $context = array_merge( array_reverse($before), array($position), $after );
+        return array_merge( array_reverse($before), array($position), $after );
+    }
+    
+    public function classify(Position $position){
+        $em = $this->getEntityManager();
         
         $previous = null;
         $parking  = null;
         $group    = array();
+        $context  = $this->getSurroundings($position);
+        
         foreach($context as $inspected){
             // group position in parking mode
             if($previous != null){
