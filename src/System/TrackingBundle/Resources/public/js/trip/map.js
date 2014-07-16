@@ -17,13 +17,13 @@ function initialize() {
 	var line   = [];
 	var bounds = new google.maps.LatLngBounds();
 	var parking = new google.maps.MarkerImage(
-			'/bundles/systemtracking/img/parking-red.png',
+			'../bundles/systemtracking/img/parking-red.png',
 	        new google.maps.Size(15, 15),
 	        new google.maps.Point(0,0),
 	        new google.maps.Point(7, 7)
 	);
 	var parkinga = new google.maps.MarkerImage(
-			'/bundles/systemtracking/img/parking.png',
+			'../bundles/systemtracking/img/parking.png',
 	        new google.maps.Size(15, 15),
 	        new google.maps.Point(0,0),
 	        new google.maps.Point(7, 7)
