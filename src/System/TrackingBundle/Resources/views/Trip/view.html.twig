@@ -26,7 +26,7 @@
 	</thead>
 	<tbody>
 		{% for position in positions %}
-		<tr data-lng="{{ position.getLongitude() }}" data-lat="{{ position.getLatitude() }}">
+		<tr{% if position.getType() == 2 %} class="parking"{% elseif position.getType() == 3 %} class="parking-activity"{% endif %} data-lng="{{ position.getLongitude() }}" data-lat="{{ position.getLatitude() }}" data-type="{{ position.getType() }}">
 			<td>{{ position.getDateFixed()|date('Y-m-d H:i:s') }} <small>({{ position.getDateCreated()|date('H:i:s') }})</small></td>
 			<td>{{ position.getLatitude() }}</td>
 			<td>{{ position.getLongitude() }}</td>

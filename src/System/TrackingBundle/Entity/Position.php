@@ -10,6 +10,20 @@ use FOS\UserBundle\Entity\User as BaseUser;
  */
 class Position
 {
+    /**
+     * position types
+     */
+    const TYPE_NEW = 0;
+    const TYPE_TRIP = 1;
+    const TYPE_PARKING = 2;
+    const TYPE_PARKING_ACTIVITY = 3;
+    
+    /**
+     * position types used for classifing positions
+     */
+    const TYPE_PARKING_CONTEXT = 4;
+    const TYPE_PARKING_CANDIDATE = 5;
+    
 	/**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -62,6 +76,11 @@ class Position
      * @ORM\Column(type="decimal", precision=14, scale=6, nullable=true)
      */
     protected $course;
+   
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    protected $type = self::TYPE_NEW;
 
     /**
      * Get id
@@ -324,5 +343,28 @@ class Position
     public function getDateFixed()
     {
         return $this->date_fixed;
+    }
+
+    /**
+     * Set type
+     *
+     * @param int $type
+     * @return Position
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return int 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

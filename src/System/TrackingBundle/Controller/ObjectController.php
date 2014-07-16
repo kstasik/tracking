@@ -135,9 +135,10 @@ class ObjectController extends Controller
                 $em->persist($position);
                 $em->flush();
             }
+            
+            $em->getRepository('SystemTrackingBundle:Position')->classifyByObject($object);
 
             return new Response('1');
-            
         }
         
         return new Response('0');
