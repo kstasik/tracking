@@ -32,7 +32,9 @@ function initialize() {
 	for(i = coordinates.length-1; i>=0; i--){
 		var latlng = new google.maps.LatLng(coordinates[i].lat, coordinates[i].lng)
 		
-		if(coordinates[i].type == 3){
+		if(coordinates[i].type == 1){
+			line.push(latlng);
+			bounds.extend(latlng);
 			new google.maps.Marker({
 			    position: latlng,
 			    icon: parkinga,
@@ -46,21 +48,21 @@ function initialize() {
 			
 			new google.maps.Marker({
 			    position: latlng,
-			    icon: parking,
-			    draggable: false,
-			    map: map
-			});
-		}else{
-			line.push(latlng);
-			bounds.extend(latlng);
-			
-			new google.maps.Marker({
-			    position: latlng,
 			    icon: {
 			      path: google.maps.SymbolPath.CIRCLE,
 			      scale: 2
 			    },
 			    strokeColor: '#46B8DA',
+			    draggable: false,
+			    map: map
+			});
+		}else if(coordinates[i].type == 3){
+			line.push(latlng);
+			bounds.extend(latlng);
+			
+			new google.maps.Marker({
+			    position: latlng,
+			    icon: parking,
 			    draggable: false,
 			    map: map
 			});

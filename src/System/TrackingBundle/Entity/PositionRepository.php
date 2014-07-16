@@ -7,7 +7,11 @@ use Doctrine\ORM\Query;
 use Doctrine\Common\Util\Debug;
 
 class PositionRepository extends EntityRepository{
-    const TRIPS_INTERVAL = 'INTERVAL 20 MINUTE';
+    //const TRIPS_INTERVAL = 'INTERVAL 20 MINUTE';
+    
+    const RADIUS = 0.05;
+    
+    const PARKING_THRESHOLD = 3;
     
     public function getLastUserPosition(User $user){        
         $query = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a, \System\TrackingBundle\Entity\Object o LEFT JOIN o.users u WHERE o.id = a.object AND u.id = :user ORDER BY a.date_created DESC')
@@ -36,13 +40,9 @@ class PositionRepository extends EntityRepository{
     }
     
     public function getTripCollection(Object $object){
-        return $this->getEntityManager()->createQuery('SELECT a.id, a.date_fixed '.
-            'FROM \System\TrackingBundle\Entity\Position a '.
-            'LEFT JOIN \System\TrackingBundle\Entity\Position b '.
-            'WITH( b.date_fixed >= DATETIME_SUB(a.date_fixed, '.self::TRIPS_INTERVAL.') AND b.type = :type AND b.date_fixed < a.date_fixed AND b.object = :object ) WHERE a.type = :type AND b.date_fixed IS NULL AND a.object = :object '.
-            'GROUP BY a.date_fixed ORDER BY a.date_fixed DESC')
+        return $this->getEntityManager()->createQuery('SELECT a.id, a.date_fixed FROM \System\TrackingBundle\Entity\Position a WHERE a.type = :type AND a.object = :object ORDER BY a.date_fixed DESC')
             ->setParameter('object', $object->getId())
-            ->setParameter('type', Position::TYPE_TRIP)
+            ->setParameter('type', Position::TYPE_TRIP_START)
             ->getResult();
     }
     
@@ -55,9 +55,9 @@ class PositionRepository extends EntityRepository{
                ->setParameter('object', $trip->getObject()->getId());
 
         try{
-            $next = $this->getNextTripDate($trip);
+            $next = $this->getEndTripDate($trip);
             
-            return $q->where('p.date_fixed >= :from AND p.date_fixed < :to')
+            return $q->where('p.date_fixed >= :from AND p.date_fixed <= :to')
                    ->setParameters(array(
                         'from' => $trip->getDateFixed()->format('Y-m-d H:i:s'),
                         'to' => $next
@@ -68,17 +68,14 @@ class PositionRepository extends EntityRepository{
         return $q->where('p.date_fixed >= ?1')->setParameters(array( 1 => $trip->getDateFixed()->format('Y-m-d H:i:s') ) )->getQuery()->getResult();
     }
     
-    protected function getNextTripDate(Position $trip){
+    protected function getEndTripDate(Position $trip){
         /* @var $query Doctrine\ORM\Query */
-        $query = $this->getEntityManager()->createQuery('SELECT MIN(a.date_fixed) '.
-                'FROM \System\TrackingBundle\Entity\Position a '.
-                'LEFT JOIN \System\TrackingBundle\Entity\Position b '.
-                'WITH( b.date_fixed >= DATETIME_SUB(a.date_fixed, '.self::TRIPS_INTERVAL.') AND b.date_fixed < a.date_fixed AND b.object = :object ) WHERE b.date_fixed IS NULL AND a.object = :object AND a.date_fixed > :start '.
-                'GROUP BY a.date_fixed ORDER BY a.date_fixed ASC')
+        $query = $this->getEntityManager()->createQuery('SELECT MIN(a.date_fixed) FROM \System\TrackingBundle\Entity\Position a WHERE a.object = :object AND a.type = :type AND a.date_fixed > :start')
                 ->setMaxResults(1);
         
         $query
             ->setParameter('start', $trip->getDateFixed()->format('Y-m-d H:i:s'))
+            ->setParameter('type', Position::TYPE_TRIP_END)
             ->setParameter('object', $trip->getObject()->getId());
         
         return $query->getSingleScalarResult();
@@ -105,10 +102,6 @@ class PositionRepository extends EntityRepository{
             $this->classify($checked);
         }       
     }
-    
-    const RADIUS = 0.05;
-    
-    const PARKING_THRESHOLD = 3;
     
     public function classify(Position $position){
         $em = $this->getEntityManager();
@@ -152,9 +145,10 @@ class PositionRepository extends EntityRepository{
                         }
                     }
                     else{
-                        $previous->setType(Position::TYPE_PARKING_CONTEXT);
-                        $parking = $previous;
+                        if($previous->getType() != Position::TYPE_TRIP_END)
+                            $previous->setType(Position::TYPE_PARKING_CONTEXT);
                         
+                        $parking = $previous;
                         $inspected->setType(Position::TYPE_PARKING_CANDIDATE);
                     }
                 }else{
@@ -168,7 +162,7 @@ class PositionRepository extends EntityRepository{
                 // set it to trip by defauly
                 $inspected->setType(Position::TYPE_TRIP);
             }
-            elseif(in_array($inspected->getType(), array(Position::TYPE_PARKING, Position::TYPE_PARKING_ACTIVITY))){
+            elseif($inspected->getType() == Position::TYPE_PARKING){
                 $parking = $inspected;
                 $group = null;
             }
@@ -182,7 +176,7 @@ class PositionRepository extends EntityRepository{
                 }
             }
             else{
-                if($inspected->getType() == Position::TYPE_PARKING_CONTEXT || $inspected->getType() == Position::TYPE_PARKING_CANDIDATE){
+                if(in_array($inspected->getType(), array(Position::TYPE_PARKING_CONTEXT, Position::TYPE_PARKING_CANDIDATE))){
                     if($parking && !in_array($parking, $group)){
                         $group[] = $parking;
                     }
@@ -206,11 +200,17 @@ class PositionRepository extends EntityRepository{
         
         $previous = null;
         foreach($context as $element){
-            if($element->getType() == Position::TYPE_PARKING_CONTEXT){
+            if(in_array($element->getType(),array(Position::TYPE_PARKING_CONTEXT,Position::TYPE_PARKING_CANDIDATE))){
                 $element->setType(Position::TYPE_PARKING);
             }
-            elseif($element->getType() == Position::TYPE_PARKING_CANDIDATE){
-                $element->setType(Position::TYPE_PARKING_ACTIVITY);
+            
+            if($previous){
+                if($previous->getType() == Position::TYPE_PARKING && $element->getType() == Position::TYPE_TRIP){
+                    $previous->setType(Position::TYPE_TRIP_START);
+                }
+                else if($previous->getType() == Position::TYPE_TRIP && $element->getType() == Position::TYPE_PARKING){
+                    $element->setType(Position::TYPE_TRIP_END);
+                }
             }
             
             $em->persist($element);

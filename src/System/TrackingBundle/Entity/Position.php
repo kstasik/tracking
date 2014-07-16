@@ -14,9 +14,12 @@ class Position
      * position types
      */
     const TYPE_NEW = 0;
-    const TYPE_TRIP = 1;
-    const TYPE_PARKING = 2;
-    const TYPE_PARKING_ACTIVITY = 3;
+
+    const TYPE_TRIP_START = 1;
+    const TYPE_TRIP = 2;
+    const TYPE_TRIP_END = 3;
+    
+    const TYPE_PARKING = 4;
     
     /**
      * position types used for classifing positions
