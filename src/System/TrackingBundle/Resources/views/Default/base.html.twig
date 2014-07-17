@@ -37,7 +37,11 @@
 	                </a>
 	            </li>
 	            <li>
-	            
+	                <a href="{{ path('system_tracking_device') }}">
+	                	Devices
+	                </a>
+	            </li>
+	            <li class="tracking-state">
 	            	{% if tracking_state.getStatus() == constant('System\\TrackingBundle\\DependencyInjection\\TrackingState::STATUS_INACTIVE') %}
 	            	<p class="navbar-text text-error"><span class="glyphicon glyphicon-ban-circle"></span> Nothing received in 15m</p>
 	            	{% elseif tracking_state.getStatus() == constant('System\\TrackingBundle\\DependencyInjection\\TrackingState::STATUS_ACTIVE') %}
@@ -47,11 +51,6 @@
 	            	{% else %}
 	            	<p class="navbar-text"><span class="glyphicon glyphicon-time"></span> Not installed</p>
 	            	{% endif %}
-
-<!-- 
- -->
-	            
-	            	
 	            </li>
 	            {% else %}
 	            <li{% if app.request.attributes.get('_route') == 'fos_user_security_login' %} class="active"{% endif %}><a href="{{ path('fos_user_security_login') }}">Login</a></li>
@@ -61,10 +60,10 @@
 	          
 	          <ul class="nav navbar-nav navbar-right">
 	            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-	            <li>
+	            <li class="user-status">
 	                <p class="navbar-text">{{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}</p>
 	            </li>
-	            <li>
+	            <li class="user-logout">
 	                <a href="{{ path('fos_user_security_logout') }}">
 	                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
 	                </a>

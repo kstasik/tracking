@@ -1,0 +1,26 @@
+{% extends "SystemTrackingBundle::Default/base.html.twig" %}
+
+{% block body %}
+
+<h2>List of Devices</h2>
+
+{% if devices|length > 0 %}
+<table class="table table-striped">
+	<thead>
+		<th>ID</th>
+		<th>Name</th>
+		<th>Api Key</th>
+	</thead>
+	<tbody>
+		{% for device in devices %}
+		<tr>
+			<td>{{ device.id }}</td>
+			<td>{{ device.system }}</td>
+			<td>{{ device.apiKey }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endif %}
+
+{% endblock body %}

@@ -58,6 +58,24 @@ body {
 	color: @state-warning-text;
 }
 
+@media (max-width: 768px) {
+	.navbar-default .tracking-state .navbar-text{
+		margin-left: 15px;
+		float: none;
+	}
+	
+	.navbar-default .user-status .navbar-text{
+		margin-left: 15px;
+		display: block;
+		float: none;
+	}
+	
+	.navbar-default .user-logout a{
+		display: block;
+		float: none;
+	}
+}
+
 .parking-activity td{
 	color: #ccc;
 }
