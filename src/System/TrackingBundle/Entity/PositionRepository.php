@@ -175,13 +175,14 @@ class PositionRepository extends EntityRepository{
             if($group === null){
                 // if first element is already set to TYPE_PARKING it means
                 // that we don't want to apply threshold filter until trip position is found
+                // ○ ● ● ● ● ● ● ● ● ● ● ● ● ● ●
                 if($inspected->getType() == Position::TYPE_TRIP){
                     $group = array();
                 }
             }
             else{
                 if(in_array($inspected->getType(), array(Position::TYPE_PARKING_CONTEXT, Position::TYPE_PARKING_CANDIDATE))){
-                    if($parking && !in_array($parking, $group)){
+                    if($parking && $parking != $context[0] && !in_array($parking, $group)){
                         $group[] = $parking;
                     }
                     
@@ -190,7 +191,7 @@ class PositionRepository extends EntityRepository{
                 else{
                     if(count($group) < self::PARKING_THRESHOLD){
                         foreach($group as $_element){
-                            $_element->setType(Position::TYPE_TRIP);
+                            $_element->setType(Position::TYPE_PARKING);
                         }
                     }
                         
@@ -210,7 +211,7 @@ class PositionRepository extends EntityRepository{
             
             if($previous){
                 if($previous->getType() == Position::TYPE_PARKING && $element->getType() == Position::TYPE_TRIP){
-                    $previous->setType(Position::TYPE_TRIP_START);
+                    $element->setType(Position::TYPE_TRIP_START); // $previous
                 }
                 else if($previous->getType() == Position::TYPE_TRIP && $element->getType() == Position::TYPE_PARKING){
                     $element->setType(Position::TYPE_TRIP_END);
