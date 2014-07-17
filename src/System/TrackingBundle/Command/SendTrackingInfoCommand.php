@@ -19,6 +19,11 @@ class SendTrackingInfoCommand extends ContainerAwareCommand
     {
         $this
             ->setName('tracking:send')
+            ->addArgument(
+                'type',
+                InputArgument::REQUIRED,
+                'Type of message: [is_near_object,alert]?'
+            )
             ->setDescription('Send information to mobiel devices.');
     }
 
@@ -27,6 +32,14 @@ class SendTrackingInfoCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $type = $input->getArgument('type');
+        
+        if(!in_array($type, array('is_near_object','alert'))){
+            $output->writeln(sprintf('<error>wrong message type: %s</error>', $type));
+            return;
+        }
+        
+        $output->writeln(sprintf('message type: <comment>%s</comment>', $type));
         $output->writeln('<comment>send gcm and ios notifications</comment>');        
         
         $doctrine = $this->getContainer()->get('doctrine');
@@ -39,22 +52,31 @@ class SendTrackingInfoCommand extends ContainerAwareCommand
             $output->writeln(sprintf('sending message to device %d', $device->getId()));
 
             $position = $repo->getLastObjectPosition($device->getObjects()->first());
+
+            $request = array(
+                'parameters' => null
+            );
             
             // create request
-            $request = array(
-                'parameters' => array(
+            if($type == 'is_near_object'){
+                $request['parameters'] = array(
                     'position' => array(
                 	   'latitude' => $position->getLatitude(),
                 	   'longitude' => $position->getLongitude(),
-                    )      
-                )
-            );
+                    ) 
+                );
+            }
+            elseif($type == 'alert'){
+                $request['parameters'] = array(
+                    'message' => 'Object is in the move and no device is near it!' 
+                );
+            }
             
             // create message
             $message = new Message();
             $message->setDevice($device);
             $message->setDateCreated(new \DateTime());
-            $message->setAction('is_near_object');
+            $message->setAction($type);
             
             $message->setRequest($this->getContainer()->get('jms_serializer')->serialize($request['parameters'], 'json'));
             
@@ -62,7 +84,7 @@ class SendTrackingInfoCommand extends ContainerAwareCommand
             $em->flush();
             
             // add id action
-            $request['action'] = 'is_near_object';
+            $request['action'] = $type;
             $request['id']     = $message->getId();
             
             // send message
