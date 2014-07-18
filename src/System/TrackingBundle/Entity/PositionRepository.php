@@ -7,11 +7,10 @@ use Doctrine\ORM\Query;
 use Doctrine\Common\Util\Debug;
 
 class PositionRepository extends EntityRepository{
-    //const TRIPS_INTERVAL = 'INTERVAL 20 MINUTE';
-    
-    const RADIUS = 0.05;
-    
+    const RADIUS = 0.09;
     const PARKING_THRESHOLD = 3;
+    const TRIP_THRESHOLD = 3;
+    const NEIGHBOURS = 20;
     
     public function getLastUserPosition(User $user){        
         $query = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a, \System\TrackingBundle\Entity\Object o LEFT JOIN o.users u WHERE o.id = a.object AND u.id = :user ORDER BY a.date_created DESC')
@@ -82,6 +81,19 @@ class PositionRepository extends EntityRepository{
     }
     
     /**
+     * Reclassify all positions
+     */
+    public function reclassify(){
+        $clear = $this->getEntityManager()->createQuery('UPDATE \System\TrackingBundle\Entity\Position a WHERE a.type = :type')->setParameter('type', Position::TYPE_NEW);
+        $clear->execute();
+        
+        $objects = $this->getEntityManager()->getRepository('SystemTrackingBundle:Object')->findAll();
+        foreach($objects as $object){
+            $this->classifyByObject($object);
+        }
+    }
+    
+    /**
      * Classify positions of an object
      * 
      * @param Object $object
@@ -108,14 +120,14 @@ class PositionRepository extends EntityRepository{
             ->setParameter('object', $position->getObject()->getId())
             ->setParameter('date', $position->getDateFixed())
             ->setParameter('position', $position->getId())
-            ->setMaxResults(10)
+            ->setMaxResults(self::NEIGHBOURS)
             ->getResult(Query::HYDRATE_OBJECT);
         
         $after = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a WHERE a.date_fixed >= :date AND a.id != :position AND a.object = :object ORDER BY a.date_fixed ASC')
             ->setParameter('object', $position->getObject()->getId())
             ->setParameter('date', $position->getDateFixed())
             ->setParameter('position', $position->getId())
-            ->setMaxResults(10)
+            ->setMaxResults(self::NEIGHBOURS)
             ->getResult(Query::HYDRATE_OBJECT);
         
         return array_merge( array_reverse($before), array($position), $after );
@@ -124,10 +136,10 @@ class PositionRepository extends EntityRepository{
     public function classify(Position $position){
         $em = $this->getEntityManager();
         
-        $previous = null;
-        $parking  = null;
-        $group    = array();
-        $context  = $this->getSurroundings($position);
+        $previous  = null;
+        $parking   = null;
+        $context   = $this->getSurroundings($position);
+        $firsttype = $context[0]->getType();
         
         foreach($context as $inspected){
             // group position in parking mode
@@ -168,47 +180,27 @@ class PositionRepository extends EntityRepository{
             }
             elseif($inspected->getType() == Position::TYPE_PARKING){
                 $parking = $inspected;
-                $group = null;
-            }
-            
-            // parking threshold - number of parking position (without parking context) in a row
-            if($group === null){
-                // if first element is already set to TYPE_PARKING it means
-                // that we don't want to apply threshold filter until trip position is found
-                // ○ ● ● ● ● ● ● ● ● ● ● ● ● ● ●
-                if($inspected->getType() == Position::TYPE_TRIP){
-                    $group = array();
-                }
-            }
-            else{
-                if(in_array($inspected->getType(), array(Position::TYPE_PARKING_CONTEXT, Position::TYPE_PARKING_CANDIDATE))){
-                    if($parking && $parking != $context[0] && !in_array($parking, $group)){
-                        $group[] = $parking;
-                    }
-                    
-                    $group[] = $inspected;
-                }
-                else{
-                    if(count($group) < self::PARKING_THRESHOLD){
-                        foreach($group as $_element){
-                            $_element->setType(Position::TYPE_PARKING);
-                        }
-                    }
-                        
-                    $group = array();
-                }
             }
             
             // set previous
             $previous = $inspected;
         }
         
-        $previous = null;
         foreach($context as $element){
             if(in_array($element->getType(),array(Position::TYPE_PARKING_CONTEXT,Position::TYPE_PARKING_CANDIDATE))){
                 $element->setType(Position::TYPE_PARKING);
             }
-            
+        }
+        
+        // remove noises (parking first)
+        $this->applyMask($context, $firsttype);
+        
+        // apply mask again (short trips)
+        $this->applyMask($context, $firsttype, self::TRIP_THRESHOLD, Position::TYPE_PARKING, Position::TYPE_TRIP);
+        
+        // classify positions
+        $previous = null;
+        foreach($context as $element){
             if($previous){
                 if($previous->getType() == Position::TYPE_PARKING && $element->getType() == Position::TYPE_TRIP){
                     $element->setType(Position::TYPE_TRIP_START); // $previous
@@ -223,6 +215,44 @@ class PositionRepository extends EntityRepository{
         }
         
         $em->flush();
+    }
+    
+    public function applyMask($context, $firsttype, $threshold = self::PARKING_THRESHOLD, $state = Position::TYPE_TRIP, $noise = Position::TYPE_PARKING){
+        // if first element original type
+        // ○ ● ● ○ ○ ○ ○ ○ ○ ○ ○ ○ ○
+        // ○ ○ ○ ● ● ○ ○ ○ ○ ○ ○ ○ ○ etc.
+        // ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ● ● ○
+        if($firsttype == $noise){
+            $group = null;
+        }else{
+            // otherwise
+            // ● ● ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○
+            // ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ● ● ○
+            $group = array();
+        }
+        
+        foreach($context as $inspected){
+            if(is_array($group)){
+                // finds groups of points representing same state (noise)
+                
+                if($inspected->getType() == $noise){
+                   $group[] = $inspected;
+                }
+                else{
+                    // if group is smaller than THRESHOLD set status to trip
+                    if(count($group) <= $threshold){
+                        foreach($group as $element){
+                            $element->setType($state);
+                        }
+                    }
+            
+                    $group = array();
+                }
+            }
+            elseif($inspected->getType() == $state){
+                $group = array();
+            }
+        }
     }
     
     public function getDistance(Position $prev, Position $next) {
