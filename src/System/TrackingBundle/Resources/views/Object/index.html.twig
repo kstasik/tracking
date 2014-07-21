@@ -16,7 +16,10 @@
 		<tr>
 			<td>{{ object.id }}</td>
 			<td>{{ object.name }}</td>
-			<td><a href="{{ path('system_tracking_trip', {id: object.id}) }}" class="btn btn-primary btn-xs">View</a></td>
+			<td>
+				<a href="{{ path('system_tracking_object_edit', {id: object.id}) }}" class="btn btn-info btn-xs">Edit</a>
+				<a href="{{ path('system_tracking_trip', {id: object.id}) }}" class="btn btn-primary btn-xs">Trips</a>
+			</td>
 		</tr>
 		{% endfor %}
 	</tbody>

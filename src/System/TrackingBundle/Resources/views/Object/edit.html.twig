@@ -1,0 +1,19 @@
+{% extends "SystemTrackingBundle::Default/base.html.twig" %}
+
+{% block body %}
+
+<h2>Edit Object</h2>
+
+<form action="{{ path("system_tracking_object_edit", {id:app.request.get('id')}) }}" method="post" class="form-new-object" role="form">
+        
+    {{ form_widget(form._token) }}
+    {{ form_errors(form.name) }}
+    
+    <p>
+    	<input type="text" class="form-control" name="form[name]" placeholder="Name" value="" required="required" />
+	</p>
+	<p>
+		<button class="btn btn-sm btn-primary btn-block" type="submit">Save</button>
+	</p>
+</form>
+{% endblock body %}

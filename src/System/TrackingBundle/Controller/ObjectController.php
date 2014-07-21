@@ -57,6 +57,38 @@ class ObjectController extends Controller
     }
     
     /**
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function editAction($id, Request $request){
+        $user = $this->get('security.context')->getToken()->getUser();
+    
+        // create a task and give it some dummy data for this example
+        $object = $this->getDoctrine()->getRepository('SystemTrackingBundle:Object')->find($id);
+    
+        $form = $this->createFormBuilder($object)
+            ->add('name', 'text')
+            ->add('save', 'submit')
+            ->getForm();
+    
+        if($request->isMethod('POST')){
+            $form->submit($request);
+    
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+    
+                $em->persist($object);
+                $em->flush();
+    
+                return $this->redirect($this->generateUrl('system_tracking_object'));
+            }
+        }
+    
+        return $this->render('SystemTrackingBundle:Object:edit.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+    
+    /**
      * Tracking api method
      * 
      * @param Request $request
