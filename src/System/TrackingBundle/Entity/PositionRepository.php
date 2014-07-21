@@ -5,12 +5,14 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\Common\Util\Debug;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class PositionRepository extends EntityRepository{
-    const RADIUS = 0.09;
-    const PARKING_THRESHOLD = 3;
+    const RADIUS = 0.08;
+    const PARKING_THRESHOLD = 5;
     const TRIP_THRESHOLD = 3;
     const NEIGHBOURS = 20;
+    const GROUP_TIME_THRESHOLD = 20;
     
     public function getLastUserPosition(User $user){        
         $query = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a, \System\TrackingBundle\Entity\Object o LEFT JOIN o.users u WHERE o.id = a.object AND u.id = :user ORDER BY a.date_created DESC')
@@ -144,9 +146,10 @@ class PositionRepository extends EntityRepository{
         foreach($context as $inspected){
             // group position in parking mode
             if($previous != null){
+                $timediff = $inspected->getDateFixed()->getTimestamp() - $previous->getDateFixed()->getTimestamp();                
                 $distance = $this->getDistance($inspected, $previous);
-
-                if($distance < self::RADIUS){
+                
+                if($distance < self::RADIUS || $timediff/60 > self::GROUP_TIME_THRESHOLD){
                     if($parking){
                         // if distance from parking context is less then radius
                         if($this->getDistance($inspected, $parking) < self::RADIUS ){
@@ -196,7 +199,7 @@ class PositionRepository extends EntityRepository{
         $this->applyMask($context, $firsttype);
         
         // apply mask again (short trips)
-        $this->applyMask($context, $firsttype, self::TRIP_THRESHOLD, Position::TYPE_PARKING, Position::TYPE_TRIP);
+        // $this->applyMask($context, $firsttype, self::TRIP_THRESHOLD, Position::TYPE_PARKING, Position::TYPE_TRIP);
         
         // classify positions
         $previous = null;
@@ -228,29 +231,33 @@ class PositionRepository extends EntityRepository{
             // otherwise
             // ● ● ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○
             // ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ● ● ○
-            $group = array();
+            $group = new ArrayCollection();
         }
         
         foreach($context as $inspected){
-            if(is_array($group)){
+            if($group !== null){
                 // finds groups of points representing same state (noise)
                 
                 if($inspected->getType() == $noise){
-                   $group[] = $inspected;
+                   $group->add($inspected);
                 }
                 else{
                     // if group is smaller than THRESHOLD set status to trip
-                    if(count($group) <= $threshold){
-                        foreach($group as $element){
-                            $element->setType($state);
+                    if($group->count() > 0 && $group->count() <= $threshold){
+                        $diff =  $group->last()->getDateFixed()->getTimestamp() - $group->first()->getDateFixed()->getTimestamp();
+
+                        if( $diff/60 < self::GROUP_TIME_THRESHOLD ){
+                            foreach($group as $element){
+                                $element->setType($state);
+                            }   
                         }
                     }
             
-                    $group = array();
+                    $group = new ArrayCollection();
                 }
             }
             elseif($inspected->getType() == $state){
-                $group = array();
+                $group = new ArrayCollection();
             }
         }
     }

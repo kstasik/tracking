@@ -29,6 +29,16 @@ function initialize() {
 	        new google.maps.Point(7, 7)
 	);
 	
+	var parinkgr = {
+			strokeColor: '#247083',
+			strokeOpacity: 0.8,
+			strokeWeight: 2,
+			fillColor: '#48A2B9',
+			fillOpacity: 0.35,
+			map: map,
+			radius: jQuery('#tracking-route').attr('data-radius')-0
+    };
+	
 	for(i = coordinates.length-1; i>=0; i--){
 		var latlng = new google.maps.LatLng(coordinates[i].lat, coordinates[i].lng)
 		
@@ -41,6 +51,10 @@ function initialize() {
 			    draggable: false,
 			    map: map
 			});
+			
+			var opts = parinkgr;
+			opts.center = latlng; 
+			new google.maps.Circle(opts);
 		}
 		else if(coordinates[i].type == 2){
 			line.push(latlng);
@@ -56,6 +70,7 @@ function initialize() {
 			    draggable: false,
 			    map: map
 			});
+			
 		}else if(coordinates[i].type == 3){
 			line.push(latlng);
 			bounds.extend(latlng);
@@ -66,6 +81,10 @@ function initialize() {
 			    draggable: false,
 			    map: map
 			});
+			
+			var opts = parinkgr;
+			opts.center = latlng; 
+			new google.maps.Circle(opts);
 		}
 	}
 	

@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<h2>List of Devices</h2>
+<h2>Devices</h2>
 
 {% if devices|length > 0 %}
 <table class="table table-striped">
@@ -21,6 +21,8 @@
 		{% endfor %}
 	</tbody>
 </table>
+{% else %}
+<div class="alert alert-warning" role="alert">Nothing found</div>
 {% endif %}
 
 {% endblock body %}

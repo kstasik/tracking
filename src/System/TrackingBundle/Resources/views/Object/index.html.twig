@@ -2,14 +2,13 @@
 
 {% block body %}
 
-<h2>List of Tracked Objects <a href="{{ path('system_tracking_object_new') }}" class="btn btn-success">Add new</a></h2>
+<h2>Tracked Objects <a href="{{ path('system_tracking_object_new') }}" class="btn btn-success">Add new</a></h2>
 
 {% if objects|length > 0 %}
 <table class="table table-striped">
 	<thead>
 		<th>ID</th>
 		<th>Name</th>
-		<th>Api Key</th>
 		<th>Actions</th>
 	</thead>
 	<tbody>
@@ -17,12 +16,13 @@
 		<tr>
 			<td>{{ object.id }}</td>
 			<td>{{ object.name }}</td>
-			<td>{{ object.apiKey }}</td>
-			<td><a href="{{ path('system_tracking_trip', {id: object.id}) }}" class="btn btn-primary btn-xs">View trips</a></td>
+			<td><a href="{{ path('system_tracking_trip', {id: object.id}) }}" class="btn btn-primary btn-xs">View</a></td>
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
+{% else %}
+<div class="alert alert-warning" role="alert">Nothing found</div>
 {% endif %}
 
 {% endblock body %}
