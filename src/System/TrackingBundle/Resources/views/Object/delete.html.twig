@@ -1,0 +1,19 @@
+{% extends "SystemTrackingBundle::Default/base.html.twig" %}
+
+{% block body %}
+
+<h2>Delete Object</h2>
+
+<form action="{{ path("system_tracking_object_delete", {id:app.request.get('id')}) }}" method="post" class="form-new-object" role="form">
+        
+    {{ form_widget(form._token) }}
+    
+	<p>
+		Are you sure you want to delete <strong>{{ object.name }}</strong>?
+	</p>
+	
+	<p>
+		<button class="btn btn-sm btn-primary btn-block" type="submit">Confirm</button>
+	</p>
+</form>
+{% endblock body %}

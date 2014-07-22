@@ -4,6 +4,7 @@ namespace System\TrackingBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="System\TrackingBundle\Entity\ObjectRepository")
@@ -23,6 +24,7 @@ class Object
     
     /**
      * @ORM\Column(length=255)
+     * @Assert\NotBlank
      * @Expose
      */
     protected $name;

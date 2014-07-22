@@ -8,7 +8,7 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('SystemTrackingBundle:Default:index.html.twig', array('name' => 'dupaaa'));
+        return $this->render('SystemTrackingBundle:Default:index.html.twig');
     }
     
     /**

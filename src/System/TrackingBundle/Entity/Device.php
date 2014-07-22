@@ -31,8 +31,8 @@ class Device
     /**
      * @ORM\ManyToMany(targetEntity="Object")
      * @ORM\JoinTable(name="device_to_object",
-     *      joinColumns={@ORM\JoinColumn(name="device_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="object_id", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="device_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="object_id", referencedColumnName="id", onDelete="CASCADE")}
      *      )
      * @Expose
      */
