@@ -1,0 +1,91 @@
+{% extends "SystemTrackingBundle::Default/base.html.twig" %}
+
+{% block body %}
+
+
+<div class="row">
+	<div class="col-md-6">
+		<h2>{{ 'devices.edit.title'|trans({}, 'tracking') }} <a href="{{ path('system_tracking_device_delete', {id: app.request.get('id')}) }}" class="btn btn-danger btn-xs">{{ 'devices.edit.delete'|trans({}, 'tracking') }}</a></h2>
+	
+		<form action="{{ path("system_tracking_device_edit", {id:app.request.get('id')}) }}" method="post" class="form-new-object" role="form">
+		    {{ form_widget(form._token) }}
+		    
+		    <p>
+		    	<input type="text" class="form-control" name="form[name]" placeholder="{{ 'devices.edit.name'|trans({}, 'tracking') }}" value="{{ form.name.vars.value }}" required="required" /> 
+			</p>
+			
+			<p>
+				{{ 'devices.edit.api_key'|trans({}, 'tracking') }}: {{ api_key }}
+			</p>
+			
+			<div class="checkbox">
+			    <label>
+			      {{ form_widget(form.alerts_enabled) }} {{ 'devices.edit.alerts_enabled'|trans({}, 'tracking') }}
+			    </label>
+			</div>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">{{ 'devices.edit.objects'|trans({}, 'tracking') }}</div>
+			    <ul class="list-group">
+		        {% for o in form.objects %}
+		            <li class="list-group-item">
+		                {{ form_widget(o) }}
+		                
+		                {{ form_label(o) }}
+		            </li>
+		        {% endfor %}    
+		        </ul>
+			</div>
+			<div class="panel panel-default">
+		        <div class="panel-heading panel-middle-heading">{{ 'devices.edit.alerts.settings'|trans({}, 'tracking') }}</div>
+		        
+		        <div class="panel-body">
+				    <p>
+						<label>{{ 'devices.edit.nodata_timeout'|trans({}, 'tracking') }}:</label>
+				    	<input type="time" class="form-control" name="form[nodata_timeout]" value="{{ form.nodata_timeout.vars.value }}" /> 
+					</p>
+				    <p>
+						<label>{{ 'devices.edit.nodata_critical_timeout'|trans({}, 'tracking') }}:</label>
+				    	<input type="time" class="form-control" name="form[nodata_critical_timeout]" value="{{ form.nodata_critical_timeout.vars.value }}" /> 
+					</p>
+					
+					<p>{{ 'devices.edit.alerts.description'|trans({}, 'tracking') }}</p>
+				</div>
+			</div>
+			
+			<p>
+				<button class="btn btn-sm btn-primary btn-block" type="submit">{{ 'devices.edit.submit'|trans({}, 'tracking') }}</button>
+			</p>
+		</form>
+	</div>
+	<div class="col-md-6">
+		<h2>{{ 'devices.edit.messages.title'|trans({}, 'tracking') }}</h2>
+		
+		{% if messages|length > 0 %}
+		<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<th>ID</th>
+				<th>{{ 'devices.edit.messages.table.date'|trans({}, 'tracking') }}</th>
+				<th>{{ 'devices.edit.messages.table.action'|trans({}, 'tracking') }}</th>
+				<th>{{ 'devices.edit.messages.table.response'|trans({}, 'tracking') }}</th>
+			</thead>
+			<tbody>
+				{% for message in messages %}
+				<tr>
+					<td>{{ message.id }}</td>
+					<td>{{ message.getDateCreated()|date('H:i:s') }}<br /><small>{{ message.getDateCreated()|date('Y-d-m') }}</small></td>
+					<td>{{ message.getAction() }}</td>
+					<td>{{ message.getResponse()|default('-') }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		</div>
+		{% else %}
+		<div class="alert alert-warning" role="alert">{{ 'devices.edit.messages.nothing'|trans({}, 'tracking') }}</div>
+		{% endif %}
+	</div>
+</div>
+
+{% endblock body %}

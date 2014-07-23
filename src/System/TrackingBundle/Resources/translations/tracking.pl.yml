@@ -18,7 +18,33 @@ devices:
     nothing: Brak urządzeń w bazie danych
     table:
         name: Nazwa
-        api_key: Klucz Api
+        system: System
+        action: Akcje
+        edit: Edytuj
+    edit:
+        title: Edytuj urządzenie
+        submit: Zapisz urządzenie
+        name: Nazwa
+        delete: Usuń
+        api_key: Klucz Api Urządzenia
+        alerts_enabled: Wysyłaj notyfikacje do tego urządzenia
+        objects: Obiekty monitorowane przez urządzenie
+        messages: 
+            title: Wiadomości wysłane do urządzenia
+            nothing: Brak wiadomości
+            table:
+                date: Data
+                action: Akcja
+                response: Odpowiedź
+        nodata_timeout: Limit czasu braku danych
+        nodata_critical_timeout: Krytyczny limit czasu braku danych
+        alerts: 
+            settings: Ustawienia ostrzeżeń
+            description: Użyj limitów czasowych aby skonfigurować notyfikacje informujące Cię kiedy obiekt nie będzie wysyłał danych o lokalizacji.
+    delete:
+        title: Usuń urządzenie
+        confirm: Czy jesteś pewnien że chcesz usunąć urządzenie "%name%"?
+        submit: Potwierdzam
     
 objects:
     title: Obiekty

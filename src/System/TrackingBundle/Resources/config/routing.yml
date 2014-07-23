@@ -2,10 +2,19 @@ system_tracking_homepage:
     pattern:  /
     defaults: { _controller: SystemTrackingBundle:Default:index }
     
+# devices
 system_tracking_device:
     pattern:  /devices
     defaults: { _controller: SystemTrackingBundle:Device:index }
     
+system_tracking_device_edit:
+    pattern:  /devices/edit/{id}
+    defaults: { _controller: SystemTrackingBundle:Device:edit }
+    
+system_tracking_device_delete:
+    pattern:  /devices/delete/{id}
+    defaults: { _controller: SystemTrackingBundle:Device:delete }
+
 # objects
 system_tracking_object:
     pattern:  /objects

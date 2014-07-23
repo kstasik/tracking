@@ -4,9 +4,18 @@ namespace System\TrackingBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 
 class ObjectRepository extends EntityRepository{
-    public function getObjectCollection(User $user){
-        return $this->getEntityManager()->createQuery('SELECT o FROM \System\TrackingBundle\Entity\Object o LEFT JOIN o.users u WHERE u.id = :user')
-            ->setParameter('user', $user->getId())
-            ->getResult();
+    public function findByUser(User $user){
+        return $this->findByUserQB($user)->getQuery()->getResult();
+    }
+    
+    public function findByUserQB(User $user){
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        
+        $qb ->select(array('o'))
+            ->from('SystemTrackingBundle:Object', 'o')
+            ->join('o.users', 'u', 'WITH', 'u.id = :user')
+            ->setParameter('user', $user->getId());
+
+        return $qb;
     }
 }

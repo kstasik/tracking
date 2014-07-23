@@ -9,14 +9,18 @@
 	<thead>
 		<th>ID</th>
 		<th>{{ 'devices.table.name'|trans({}, 'tracking') }}</th>
-		<th>{{ 'devices.table.api_key'|trans({}, 'tracking') }}y</th>
+		<th>{{ 'devices.table.system'|trans({}, 'tracking') }}</th>
+		<th>{{ 'devices.table.action'|trans({}, 'tracking') }}</th>
 	</thead>
 	<tbody>
 		{% for device in devices %}
 		<tr>
 			<td>{{ device.id }}</td>
+			<td>{{ device.name }}</td>
 			<td>{{ device.system }}</td>
-			<td>{{ device.apiKey }}</td>
+			<td>
+				<a href="{{ path('system_tracking_device_edit', {id: device.id}) }}" class="btn btn-info btn-xs">{{ 'devices.table.edit'|trans({}, 'tracking') }}</a>
+			</td>
 		</tr>
 		{% endfor %}
 	</tbody>

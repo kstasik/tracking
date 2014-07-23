@@ -4,6 +4,7 @@ namespace System\TrackingBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="System\TrackingBundle\Entity\DeviceRepository")
@@ -39,6 +40,13 @@ class Device
     private $objects;
 
     /**
+     * @ORM\Column(length=255)
+     * @Assert\NotBlank
+     * @Expose
+     */
+    protected $name;
+
+    /**
      * @ORM\Column(length=40)
      */
     private $system;
@@ -59,6 +67,24 @@ class Device
      * @ORM\OneToMany(targetEntity="Message", mappedBy="device", cascade={"persist", "remove"})
      */
     protected $messages;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Expose
+     */
+    protected $alerts_enabled;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Expose
+     */
+    protected $nodata_timeout = 600; // 10 minutes
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Expose
+     */
+    protected $nodata_critical_timeout = 1200; // 20 minutes
     
     /**
      * Constructor
@@ -211,5 +237,130 @@ class Device
     public function getApiKey()
     {
         return $this->api_key;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Device
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Add messages
+     *
+     * @param \System\TrackingBundle\Entity\Message $messages
+     * @return Device
+     */
+    public function addMessage(\System\TrackingBundle\Entity\Message $messages)
+    {
+        $this->messages[] = $messages;
+
+        return $this;
+    }
+
+    /**
+     * Remove messages
+     *
+     * @param \System\TrackingBundle\Entity\Message $messages
+     */
+    public function removeMessage(\System\TrackingBundle\Entity\Message $messages)
+    {
+        $this->messages->removeElement($messages);
+    }
+
+    /**
+     * Get messages
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
+     * Set alerts_enabled
+     *
+     * @param boolean $alertsEnabled
+     * @return Device
+     */
+    public function setAlertsEnabled($alertsEnabled)
+    {
+        $this->alerts_enabled = $alertsEnabled;
+
+        return $this;
+    }
+
+    /**
+     * Get alerts_enabled
+     *
+     * @return boolean 
+     */
+    public function getAlertsEnabled()
+    {
+        return $this->alerts_enabled;
+    }
+
+    /**
+     * Set nodata_timeout
+     *
+     * @param integer $nodataTimeout
+     * @return Device
+     */
+    public function setNodataTimeout($nodataTimeout)
+    {
+        $this->nodata_timeout = $nodataTimeout;
+
+        return $this;
+    }
+
+    /**
+     * Get nodata_timeout
+     *
+     * @return integer 
+     */
+    public function getNodataTimeout()
+    {
+        return $this->nodata_timeout;
+    }
+
+    /**
+     * Set nodata_critical_timeout
+     *
+     * @param integer $nodataCriticalTimeout
+     * @return Device
+     */
+    public function setNodataCriticalTimeout($nodataCriticalTimeout)
+    {
+        $this->nodata_critical_timeout = $nodataCriticalTimeout;
+
+        return $this;
+    }
+
+    /**
+     * Get nodata_critical_timeout
+     *
+     * @return integer 
+     */
+    public function getNodataCriticalTimeout()
+    {
+        return $this->nodata_critical_timeout;
     }
 }

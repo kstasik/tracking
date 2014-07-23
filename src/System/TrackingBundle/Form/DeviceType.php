@@ -15,6 +15,7 @@ class DeviceType extends AbstractType
     {
         $builder
             ->add('system')
+            ->add('name')
             ->add('reg_id');
     }
 

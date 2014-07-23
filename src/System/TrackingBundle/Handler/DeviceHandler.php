@@ -67,6 +67,7 @@ class DeviceHandler
             
             $form = $this->formFactory->create(new DeviceType(), $device, array('method' => 'POST'));
             unset($parameters['username'], $parameters['password']);
+            
             $form->submit($parameters);
             
             if ($form->isValid()) {

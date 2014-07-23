@@ -18,7 +18,33 @@ devices:
     nothing: No devices in database
     table:
         name: Name
-        api_key: Api Key
+        system: System
+        action: Actions
+        edit: Edit
+    edit:
+        title: Edit Device
+        submit: Save Device
+        name: Name
+        delete: Delete
+        api_key: Device Api Key
+        alerts_enabled: Send notifications to this device
+        objects: Objects attached monitored by the device
+        messages: 
+            title: Messages sent to the device
+            nothing: No messages sent
+            table:
+                date: Date
+                action: Action
+                response: Response
+        nodata_timeout: No Data Timeout
+        nodata_critical_timeout: No Data Critical Timeout
+        alerts: 
+            settings: Alert settings
+            description: Use these time periods to set up notifications which will inform you when device attached to an object won't send any data.
+    delete:
+        title: Delete Device
+        confirm: Are you sure you want to delete "%name%" device?
+        submit: Confirm
     
 objects:
     title: Objects

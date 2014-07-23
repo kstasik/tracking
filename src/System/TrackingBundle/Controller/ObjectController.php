@@ -19,7 +19,7 @@ class ObjectController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getRepository('SystemTrackingBundle:Object');
 
-        return $this->render('SystemTrackingBundle:Object:index.html.twig', array('objects' => $em->getObjectCollection($user)));
+        return $this->render('SystemTrackingBundle:Object:index.html.twig', array('objects' => $em->findByUser($user)));
     }
 
     /**

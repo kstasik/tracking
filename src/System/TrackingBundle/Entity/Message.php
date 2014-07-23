@@ -6,9 +6,9 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 
 /**
+ * @ORM\Entity(repositoryClass="System\TrackingBundle\Entity\MessageRepository")
  * @ORM\Table(name="device_message")
  * @ORM\HasLifecycleCallbacks()
- * @ORM\Entity
  * @ExclusionPolicy("all")
  */
 class Message

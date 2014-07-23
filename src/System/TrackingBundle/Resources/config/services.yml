@@ -6,6 +6,9 @@ services:
     system.twig.api.state:
         class: System\TrackingBundle\DependencyInjection\TrackingState
         arguments: ["@doctrine.orm.entity_manager", "@security.context"]
+    system.device.notificator:
+        class: System\TrackingBundle\DependencyInjection\DeviceNotificator
+        arguments: ["@doctrine.orm.entity_manager", "@rms_push_notifications", "@jms_serializer"]
     system_tracking.device.handler:
         class: %system_tracking.device.handler.class%
         arguments: ["@doctrine.orm.entity_manager", "System\TrackingBundle\Entity\Device", "@form.factory", "@fos_user.user_manager", "@security.encoder_factory"]
