@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}{{ 'layout.meta_title'|trans({}, 'tracking') }}{% endblock %}</title>
         
         {% block stylesheets %}
 		  {% stylesheets '@bootstrap_less' combine=true %}
@@ -28,16 +28,16 @@
 	          
 	          {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 	            {% if tracking_state.getStatus() == constant('System\\TrackingBundle\\DependencyInjection\\TrackingState::STATUS_INACTIVE') %}
-            	<p class="navbar-text text-error"><span class="glyphicon glyphicon-ban-circle"></span> Nothing received in 15m</p>
+            	<p class="navbar-text text-error"><span class="glyphicon glyphicon-ban-circle"></span> {{ 'layout.state.inactive'|trans({}, 'tracking') }}</p>
             	{% elseif tracking_state.getStatus() == constant('System\\TrackingBundle\\DependencyInjection\\TrackingState::STATUS_ACTIVE') %}
-            	<p class="navbar-text text-success"><span class="glyphicon glyphicon-ok-circle"></span> Tracking</p>
+            	<p class="navbar-text text-success"><span class="glyphicon glyphicon-ok-circle"></span> {{ 'layout.state.active'|trans({}, 'tracking') }}</p>
             	{% elseif tracking_state.getStatus() == constant('System\\TrackingBundle\\DependencyInjection\\TrackingState::STATUS_DELAYED') %}
-            	<p class="navbar-text text-warning"><span class="glyphicon glyphicon-exclamation-sign"></span> Nothing received in 5m</p>
+            	<p class="navbar-text text-warning"><span class="glyphicon glyphicon-exclamation-sign"></span> {{ 'layout.state.delayed'|trans({}, 'tracking') }}</p>
             	{% else %}
-            	<p class="navbar-text"><span class="glyphicon glyphicon-time"></span> Not installed</p>
+            	<p class="navbar-text"><span class="glyphicon glyphicon-time"></span> {{ 'layout.state.notinstalled'|trans({}, 'tracking') }}</p>
             	{% endif %}
               {% else %}
-	            <a class="navbar-brand" href="#">Tracking</a>
+	            <a class="navbar-brand" href="#">{{ 'layout.title'|trans({}, 'tracking') }}</a>
 	          {% endif %}
 	        </div>
 	        
@@ -46,17 +46,21 @@
 	            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 	            <li>
 	                <a href="{{ path('system_tracking_object') }}">
-	                	Objects
+	                	{{ 'layout.link.objects'|trans({}, 'tracking') }}
 	                </a>
 	            </li>
 	            <li>
 	                <a href="{{ path('system_tracking_device') }}">
-	                	Devices
+	                	{{ 'layout.link.devices'|trans({}, 'tracking') }}
 	                </a>
 	            </li>
 	            {% else %}
-	            <li{% if app.request.attributes.get('_route') == 'fos_user_security_login' %} class="active"{% endif %}><a href="{{ path('fos_user_security_login') }}">Login</a></li>
-	            <li{% if app.request.attributes.get('_route') == 'fos_user_registration_register' %} class="active"{% endif %}><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
+	            <li{% if app.request.attributes.get('_route') == 'fos_user_security_login' %} class="active"{% endif %}><a href="{{ path('fos_user_security_login') }}">
+					{{ 'layout.login'|trans({}, 'FOSUserBundle') }}
+				</a></li>
+	            <li{% if app.request.attributes.get('_route') == 'fos_user_registration_register' %} class="active"{% endif %}><a href="{{ path('fos_user_registration_register') }}">
+					{{ 'layout.register'|trans({}, 'FOSUserBundle') }}
+				</a></li>
 	            {% endif %}
 	          </ul>
 	          

@@ -1,0 +1,63 @@
+layout:
+    meta_title: System Śledzący
+    title: Śledzenie
+    state:
+        inactive: Brak danych ponad 15 minut
+        active: Śledzenie
+        delayed: Brak danych ponad 5 minut
+        notinstalled: Nie zainstalowano
+    link:
+        objects: Obiekty
+        devices: Urządzenia
+
+default:
+    hello: Witaj w systemie śledzenia obiektów!
+
+devices:
+    title: Urządzenia
+    nothing: Brak urządzeń w bazie danych
+    table:
+        name: Nazwa
+        api_key: Klucz Api
+    
+objects:
+    title: Obiekty
+    nothing: Brak obiektów w bazie danych
+    add: Dodaj
+    table:
+        name: Nazwa
+        action: Akcje
+        edit: Edytuj
+        trips: Podróże
+    new:
+        title: Stwórz nowy obiekt
+        name: Nazwa
+        submit: Dodaj obiekt
+    edit:
+        title: Edytuj obiekt
+        delete: Usuń obiekt
+        api_key: Klucz api
+        submit: Zapisz obiekt
+    delete:
+        title: Usuń obiekt
+        confirm: Czy jesteś pewny że chcesz usunąć obiekt "%name%"
+        submit: Potwierdzam
+        
+trips:
+    title: Podróże %name%
+    nothing: Brak podróży w bazie danych
+    table:
+        date_fixed: Data pobrania
+        action: Akcje
+        view: Szczegóły
+    view:
+        title: Szczegóły podróży
+        back: Wstecz
+        table:
+            date_fixed: Data pobrania
+            latitude: Szerokość
+            longitude: Wysokość
+            speed: Prędkość
+            altitude: Wzniesienie
+            course: Kierunek
+        

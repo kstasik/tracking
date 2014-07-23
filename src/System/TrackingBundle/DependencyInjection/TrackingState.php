@@ -57,7 +57,7 @@ class TrackingState{
     }
     
     public function getStatus(){
-        if(!$this->status){
+        if(!$this->status && $this->getLastPosition()){
             $this->status = $this->getStatusUsingPosition($this->getLastPosition());
         }
         

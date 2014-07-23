@@ -13,8 +13,8 @@
 {% block body %}
 
 <h2>
-	<a href="{{ path('system_tracking_trip', {id:positions[0].object.id}) }}" class="btn btn-info"><i class="icon-white icon-chevron-left"></i> Go Back</a>
-	Trip Details
+	<a href="{{ path('system_tracking_trip', {id:positions[0].object.id}) }}" class="btn btn-info"><i class="icon-white icon-chevron-left"></i> {{ 'trips.view.back'|trans({}, 'tracking') }}</a>
+	{{ 'trips.view.title'|trans({}, 'tracking') }}
 </h2>
 
 <div id="tracking-route" data-radius="{{ constant('System\\TrackingBundle\\Entity\\PositionRepository::RADIUS')*1000 }}" style="width: 100%; height: 300px; margin-bottom: 10px;"></div>
@@ -22,12 +22,12 @@
 <div class="table-responsive">
 <table class="table table-striped">
 	<thead>
-		<th>Date Fixed</th>
-		<th>Latitude</th>
-		<th>Longitude</th>
-		<th>Speed</th>
-		<th>Altitude</th>
-		<th>Course</th>
+		<th>{{ 'trips.view.table.date_fixed'|trans({}, 'tracking') }}</th>
+		<th>{{ 'trips.view.table.latitude'|trans({}, 'tracking') }}</th>
+		<th>{{ 'trips.view.table.longitude'|trans({}, 'tracking') }}</th>
+		<th>{{ 'trips.view.table.speed'|trans({}, 'tracking') }}</th>
+		<th>{{ 'trips.view.table.altitude'|trans({}, 'tracking') }}</th>
+		<th>{{ 'trips.view.table.course'|trans({}, 'tracking') }}</th>
 	</thead>
 	<tbody>
 		{% for position in positions %}

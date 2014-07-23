@@ -200,7 +200,7 @@ class ObjectController extends Controller
                     ->setDateCreated(new \DateTime())
                     ->setDateSatellite($sat)
                     ->setDateFixed($sat)
-                    ->setSpeed($post['speed'][$i]/100)
+                    ->setSpeed($post['speed'][$i])
                     ->setAltitude($post['alt'][$i] == '999999999' ? null : $post['alt'][$i])
                     ->setCourse($post['course'][$i] == '999999999' ? null : $post['course'][$i]/100);
                 

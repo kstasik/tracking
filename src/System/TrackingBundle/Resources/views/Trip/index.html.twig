@@ -2,27 +2,27 @@
 
 {% block body %}
 
-<h2>Trips: {{ object.name }}</h2>
+<h2>{{ 'trips.title'|trans({'%name%': object.name}, 'tracking') }}</h2>
 
 {% if trips|length > 0 %}
 <table class="table table-striped">
 	<thead>
 		<th>ID</th>
-		<th>Date Fixed</th>
-		<th>Actions</th>
+		<th>{{ 'trips.table.date_fixed'|trans({}, 'tracking') }}</th>
+		<th>{{ 'trips.table.action'|trans({}, 'tracking') }}</th>
 	</thead>
 	<tbody>
 		{% for trip in trips %}
 		<tr>
 			<td>{{ trip.id }}</td>
 			<td>{{ trip.date_fixed|date('Y-m-d H:i:s') }}</td>
-			<td><a href="{{ path('system_tracking_trip_view', {id: trip.id}) }}" class="btn btn-primary btn-xs">View</a></td>
+			<td><a href="{{ path('system_tracking_trip_view', {id: trip.id}) }}" class="btn btn-primary btn-xs">{{ 'trips.table.view'|trans({}, 'tracking') }}</a></td>
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
 {% else %}
-<div class="alert alert-warning" role="alert">Nothing found</div>
+<div class="alert alert-warning" role="alert">{{ 'trips.nothing'|trans({}, 'tracking') }}</div>
 {% endif %}
 
 {% endblock body %}

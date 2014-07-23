@@ -1,0 +1,63 @@
+layout:
+    meta_title: Tracking System
+    title: Tracking
+    state:
+        inactive: Nothing received in 15m
+        active: Tracking
+        delayed: Nothing received in 5m
+        notinstalled: Not installed
+    link:
+        objects: Objects
+        devices: Devices
+
+default:
+    hello: Welcome in tracking system!
+
+devices:
+    title: Devices
+    nothing: No devices in database
+    table:
+        name: Name
+        api_key: Api Key
+    
+objects:
+    title: Objects
+    nothing: No objects in database
+    add: Add
+    table:
+        name: Name
+        action: Actions
+        edit: Edit
+        trips: Trips
+    new:
+        title: Create New Object
+        name: Name
+        submit: Add Object
+    edit:
+        title: Edit Object
+        delete: Delete Object
+        api_key: Api Key
+        submit: Save Object
+    delete:
+        title: Delete Object
+        confirm: Are you sure you want to delete "%name%" object?
+        submit: Confirm
+        
+trips:
+    title: Trips of %name%
+    nothing: No trips found
+    table:
+        date_fixed: Date Fixed
+        action: Actions
+        view: Details
+    view:
+        title: Trip Details
+        back: Go Back
+        table:
+            date_fixed: Date Fixed
+            latitude: Latitude
+            longitude: Longitude
+            speed: Speed
+            altitude: Altitude
+            course: Course
+        

@@ -2,14 +2,14 @@
 
 {% block body %}
 
-<h2>Objects <a href="{{ path('system_tracking_object_new') }}" class="btn btn-success">Add new</a></h2>
+<h2>{{ 'objects.title'|trans({}, 'tracking') }} <a href="{{ path('system_tracking_object_new') }}" class="btn btn-success">{{ 'objects.add'|trans({}, 'tracking') }}</a></h2>
 
 {% if objects|length > 0 %}
 <table class="table table-striped">
 	<thead>
 		<th>ID</th>
-		<th>Name</th>
-		<th>Actions</th>
+		<th>{{ 'objects.table.name'|trans({}, 'tracking') }}</th>
+		<th>{{ 'objects.table.action'|trans({}, 'tracking') }}</th>
 	</thead>
 	<tbody>
 		{% for object in objects %}
@@ -17,15 +17,15 @@
 			<td>{{ object.id }}</td>
 			<td>{{ object.name }}</td>
 			<td>
-				<a href="{{ path('system_tracking_object_edit', {id: object.id}) }}" class="btn btn-info btn-xs">Edit</a>
-				<a href="{{ path('system_tracking_trip', {id: object.id}) }}" class="btn btn-primary btn-xs">Trips</a>
+				<a href="{{ path('system_tracking_object_edit', {id: object.id}) }}" class="btn btn-info btn-xs">{{ 'objects.table.edit'|trans({}, 'tracking') }}</a>
+				<a href="{{ path('system_tracking_trip', {id: object.id}) }}" class="btn btn-primary btn-xs">{{ 'objects.table.trips'|trans({}, 'tracking') }}</a>
 			</td>
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
 {% else %}
-<div class="alert alert-warning" role="alert">Nothing found</div>
+<div class="alert alert-warning" role="alert">{{ 'objects.nothing'|trans({}, 'tracking') }}</div>
 {% endif %}
 
 {% endblock body %}

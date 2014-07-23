@@ -2,17 +2,19 @@
 
 {% block body %}
 
-<h2>Create New Object</h2>
+<h2>{{ 'objects.new.title'|trans({}, 'tracking') }}</h2>
 
 <form action="{{ path("system_tracking_object_new") }}" method="post" class="form-new-object" role="form">
         
     {{ form_widget(form._token) }}
     {{ form_errors(form.name) }}
+    
     <p>
-    	<input type="text" class="form-control" name="form[name]" placeholder="Name" value="" required="required" />
+    	<input type="text" class="form-control" name="form[name]" placeholder="{{ 'objects.new.name'|trans({}, 'tracking') }}" value="" required="required" />
 	</p>
+	
 	<p>
-		<button class="btn btn-sm btn-primary btn-block" type="submit">Add</button>
+		<button class="btn btn-sm btn-primary btn-block" type="submit">{{ 'objects.new.submit'|trans({}, 'tracking') }}</button>
 	</p>
 </form>
 

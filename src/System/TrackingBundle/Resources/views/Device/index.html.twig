@@ -2,14 +2,14 @@
 
 {% block body %}
 
-<h2>Devices</h2>
+<h2>{{ 'devices.title'|trans({}, 'tracking') }}</h2>
 
 {% if devices|length > 0 %}
 <table class="table table-striped">
 	<thead>
 		<th>ID</th>
-		<th>Name</th>
-		<th>Api Key</th>
+		<th>{{ 'devices.table.name'|trans({}, 'tracking') }}</th>
+		<th>{{ 'devices.table.api_key'|trans({}, 'tracking') }}y</th>
 	</thead>
 	<tbody>
 		{% for device in devices %}
@@ -22,7 +22,7 @@
 	</tbody>
 </table>
 {% else %}
-<div class="alert alert-warning" role="alert">Nothing found</div>
+<div class="alert alert-warning" role="alert">{{ 'devices.nothing'|trans({}, 'tracking') }}</div>
 {% endif %}
 
 {% endblock body %}
