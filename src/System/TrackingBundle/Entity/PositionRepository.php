@@ -40,6 +40,32 @@ class PositionRepository extends EntityRepository{
         }
     }
     
+    public function getLastTripPositions(Object $object, $delay = null){
+        $query = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a, \System\TrackingBundle\Entity\Object o WHERE o.id = a.object AND a.object = :object AND a.type = :type ORDER BY a.date_created DESC')
+            ->setMaxResults(1)
+            ->setParameter('object', $object->getId())
+            ->setParameter('type', Position::TYPE_TRIP_START);
+        
+        $start = $query->getSingleResult();
+        
+        $query = $this->getEntityManager()->createQuery('SELECT a FROM \System\TrackingBundle\Entity\Position a, \System\TrackingBundle\Entity\Object o WHERE o.id = a.object AND a.object = :object AND a.type = :type AND a.date_fixed > :date ORDER BY a.date_created ASC')
+            ->setParameter('object', $object->getId())
+            ->setParameter('date', $start->getDateFixed())
+            ->setParameter('type', Position::TYPE_TRIP);
+        
+        $list = new ArrayCollection(array($start));
+        foreach($query->getResult() as $position){
+            if(!$delay){
+                $list->add($position);
+            }
+            elseif($position->getDateFixed()->getTimestamp()-$list->last()->getDateFixed()->getTimestamp() > $delay){
+                $list->add($position);
+            }
+        }
+        
+        return $list;
+    }
+    
     public function getTripCollection(Object $object){
         return $this->getEntityManager()->createQuery('SELECT a.id, a.date_fixed FROM \System\TrackingBundle\Entity\Position a WHERE a.type = :type AND a.object = :object ORDER BY a.date_fixed DESC')
             ->setParameter('object', $object->getId())

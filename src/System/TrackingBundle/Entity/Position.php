@@ -84,6 +84,11 @@ class Position
      * @ORM\Column(type="smallint")
      */
     protected $type = self::TYPE_NEW;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="device")
+     */
+    protected $messages;
 
     /**
      * Get id
@@ -369,5 +374,45 @@ class Position
     public function getType()
     {
         return $this->type;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->messages = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add messages
+     *
+     * @param \System\TrackingBundle\Entity\Message $messages
+     * @return Position
+     */
+    public function addMessage(\System\TrackingBundle\Entity\Message $messages)
+    {
+        $this->messages[] = $messages;
+
+        return $this;
+    }
+
+    /**
+     * Remove messages
+     *
+     * @param \System\TrackingBundle\Entity\Message $messages
+     */
+    public function removeMessage(\System\TrackingBundle\Entity\Message $messages)
+    {
+        $this->messages->removeElement($messages);
+    }
+
+    /**
+     * Get messages
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 }

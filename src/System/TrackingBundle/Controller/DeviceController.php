@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use System\TrackingBundle\Entity\Position;
+use System\TrackingBundle\Form\SecondsType;
 
 class DeviceController extends Controller
 {
@@ -36,8 +37,8 @@ class DeviceController extends Controller
         $form = $this->createFormBuilder($device)
             ->add('name', 'text')
             ->add('alerts_enabled', 'checkbox', array('required'  => false))
-            ->add('nodata_timeout', 'time', array('required'  => false, 'widget' => 'single_text',  'with_minutes' => true, 'input'=>'timestamp'))
-            ->add('nodata_critical_timeout', 'time', array('required'  => false, 'widget' => 'single_text',  'with_minutes' => true, 'input'=>'timestamp'))
+            ->add('nodata_timeout', new SecondsType(), array('required'  => false))
+            ->add('nodata_critical_timeout', new SecondsType(), array('required'  => false))
             ->add('save', 'submit')
             ->add('objects', 'entity', array(
                 'class' => 'System\TrackingBundle\Entity\Object',

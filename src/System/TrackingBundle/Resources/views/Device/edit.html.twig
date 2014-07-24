@@ -65,7 +65,6 @@
 		<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>
-				<th>ID</th>
 				<th>{{ 'devices.edit.messages.table.date'|trans({}, 'tracking') }}</th>
 				<th>{{ 'devices.edit.messages.table.action'|trans({}, 'tracking') }}</th>
 				<th>{{ 'devices.edit.messages.table.response'|trans({}, 'tracking') }}</th>
@@ -73,8 +72,7 @@
 			<tbody>
 				{% for message in messages %}
 				<tr>
-					<td>{{ message.id }}</td>
-					<td>{{ message.getDateCreated()|date('H:i:s') }}<br /><small>{{ message.getDateCreated()|date('Y-d-m') }}</small></td>
+					<td>{{ message.getDateCreated()|date('Y-d-m H:i:s') }}</td>
 					<td>{{ message.getAction() }}</td>
 					<td>{{ message.getResponse()|default('-') }}</td>
 				</tr>

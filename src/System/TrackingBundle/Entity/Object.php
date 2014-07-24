@@ -49,6 +49,11 @@ class Object
     protected $api_key;
     
     /**
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="device")
+     */
+    protected $messages;
+    
+    /**
      * Constructor
      */
     public function __construct()
@@ -186,5 +191,38 @@ class Object
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * Add messages
+     *
+     * @param \System\TrackingBundle\Entity\Message $messages
+     * @return Object
+     */
+    public function addMessage(\System\TrackingBundle\Entity\Message $messages)
+    {
+        $this->messages[] = $messages;
+
+        return $this;
+    }
+
+    /**
+     * Remove messages
+     *
+     * @param \System\TrackingBundle\Entity\Message $messages
+     */
+    public function removeMessage(\System\TrackingBundle\Entity\Message $messages)
+    {
+        $this->messages->removeElement($messages);
+    }
+
+    /**
+     * Get messages
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 }

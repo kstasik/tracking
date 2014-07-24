@@ -26,6 +26,18 @@ class Message
      * @ORM\JoinColumn(name="device_id", referencedColumnName="id")
      */
     protected $device;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Object", inversedBy="messages")
+     * @ORM\JoinColumn(name="object_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $object = null;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Position", inversedBy="messages")
+     * @ORM\JoinColumn(name="position_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $position = null;
 
     /**
      * @ORM\Column(type="datetime")
@@ -38,11 +50,6 @@ class Message
      * @Expose
      */
     private $action;
-
-    /**
-     * @ORM\Column(type="text",nullable=true)
-     */
-    private $request;
 
     /**
      * @ORM\Column(type="text",nullable=true)
@@ -106,29 +113,6 @@ class Message
     }
 
     /**
-     * Set request
-     *
-     * @param string $request
-     * @return Message
-     */
-    public function setRequest($request)
-    {
-        $this->request = $request;
-
-        return $this;
-    }
-
-    /**
-     * Get request
-     *
-     * @return string 
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
      * Set response
      *
      * @param string $response
@@ -172,5 +156,51 @@ class Message
     public function getDevice()
     {
         return $this->device;
+    }
+
+    /**
+     * Set object
+     *
+     * @param \System\TrackingBundle\Entity\Object $object
+     * @return Message
+     */
+    public function setObject(\System\TrackingBundle\Entity\Object $object = null)
+    {
+        $this->object = $object;
+
+        return $this;
+    }
+
+    /**
+     * Get object
+     *
+     * @return \System\TrackingBundle\Entity\Object 
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    /**
+     * Set position
+     *
+     * @param \System\TrackingBundle\Entity\Position $position
+     * @return Message
+     */
+    public function setPosition(\System\TrackingBundle\Entity\Position $position = null)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return \System\TrackingBundle\Entity\Position 
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 }
