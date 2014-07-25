@@ -104,6 +104,17 @@ class DeviceNotificator{
         return true;
     }
     
+    /**
+     * It send notifications to the device and stores message in databas
+     * 
+     * @param Device $device Target Device
+     * @param string $type Message Type
+     * @param array $request Array which will be converted to json
+     * @param Object $object Corresponding object
+     * @param Position $position Corresponding position
+     * 
+     * @return void
+     */
     private function send(Device $device, $type, $request, Object $object = null, Position $position = null){
         // create message
         $message = new Message();
