@@ -9,6 +9,7 @@
 	<thead>
 		<th>ID</th>
 		<th>{{ 'trips.table.date_fixed'|trans({}, 'tracking') }}</th>
+		<th>{{ 'trips.table.distance'|trans({}, 'tracking') }}</th>
 		<th>{{ 'trips.table.action'|trans({}, 'tracking') }}</th>
 	</thead>
 	<tbody>
@@ -16,6 +17,7 @@
 		<tr>
 			<td>{{ trip.id }}</td>
 			<td>{{ trip.date_fixed|date('Y-m-d H:i:s') }}</td>
+			<td>{{ trip.distance }}</td>
 			<td><a href="{{ path('system_tracking_trip_view', {id: trip.id}) }}" class="btn btn-primary btn-xs">{{ 'trips.table.view'|trans({}, 'tracking') }}</a></td>
 		</tr>
 		{% endfor %}

@@ -67,9 +67,13 @@ class PositionRepository extends EntityRepository{
     }
     
     public function getTripCollection(Object $object){
-        return $this->getEntityManager()->createQuery('SELECT a.id, a.date_fixed FROM \System\TrackingBundle\Entity\Position a WHERE a.type = :type AND a.object = :object ORDER BY a.date_fixed DESC')
+        //
+        
+        return $this->getEntityManager()->createQuery('SELECT a.id, a.date_fixed, (SELECT SUM(d.distance) FROM \System\TrackingBundle\Entity\Position d WHERE d.date_fixed > a.date_fixed AND d.object = :object AND d.type = :type_trip AND d.date_fixed < MIN(f.date_fixed)) as distance FROM \System\TrackingBundle\Entity\Position a JOIN \System\TrackingBundle\Entity\Position f WHERE a.type = :type_trip_start AND a.object = :object AND f.object = :object AND f.type = :type_trip_end AND f.date_fixed > a.date_fixed GROUP BY a.id ORDER BY a.date_fixed DESC')
             ->setParameter('object', $object->getId())
-            ->setParameter('type', Position::TYPE_TRIP_START)
+            ->setParameter('type_trip_start', Position::TYPE_TRIP_START)
+            ->setParameter('type_trip', Position::TYPE_TRIP)
+            ->setParameter('type_trip_end', Position::TYPE_TRIP_END)
             ->getResult();
     }
     
@@ -174,6 +178,9 @@ class PositionRepository extends EntityRepository{
             if($previous != null){
                 $timediff = $inspected->getDateFixed()->getTimestamp() - $previous->getDateFixed()->getTimestamp();                
                 $distance = $this->getDistance($inspected, $previous);
+                
+                // save distance in database
+                $inspected->setDistance($distance);
                 
                 if($distance < self::RADIUS || $timediff/60 > self::GROUP_TIME_THRESHOLD){
                     if($parking){

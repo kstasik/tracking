@@ -75,6 +75,7 @@ trips:
     table:
         date_fixed: Date Fixed
         action: Actions
+        distance: Distance
         view: Details
     view:
         title: Trip Details

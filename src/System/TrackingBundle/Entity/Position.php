@@ -79,6 +79,11 @@ class Position
      * @ORM\Column(type="decimal", precision=14, scale=6, nullable=true)
      */
     protected $course;
+    
+    /**
+     * @ORM\Column(type="decimal", precision=14, scale=2, nullable=true)
+     */
+    protected $distance;
    
     /**
      * @ORM\Column(type="smallint")
@@ -414,5 +419,28 @@ class Position
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    /**
+     * Set distance
+     *
+     * @param string $distance
+     * @return Position
+     */
+    public function setDistance($distance)
+    {
+        $this->distance = $distance;
+
+        return $this;
+    }
+
+    /**
+     * Get distance
+     *
+     * @return string 
+     */
+    public function getDistance()
+    {
+        return $this->distance;
     }
 }

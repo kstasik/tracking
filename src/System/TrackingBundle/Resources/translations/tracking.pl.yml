@@ -75,6 +75,7 @@ trips:
     table:
         date_fixed: Data pobrania
         action: Akcje
+        distance: Dystans
         view: Szczegóły
     view:
         title: Szczegóły podróży
