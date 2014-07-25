@@ -109,7 +109,7 @@ class DeviceNotificationsManager{
                                 $this->log('     +---- <error>sending alert to device</error>');
         
                                 // send alert that object is moving and noone is near it
-                                if(!$this->notificator->sendNoDeviceNearPosition($device, $position)){
+                                if(!$this->notificator->sendNoDeviceNearPosition($device, $position, false)){
                                     $this->log('     +---- alert already sent');
                                 }
                             }else{

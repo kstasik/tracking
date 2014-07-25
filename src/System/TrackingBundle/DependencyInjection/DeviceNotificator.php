@@ -26,7 +26,7 @@ class DeviceNotificator{
         return $this->em->getRepository('SystemTrackingBundle:Message')->findOneBy($criteria,  array('id' => 'DESC'));
     }
     
-    public function sendNoDeviceNearPosition(Device $device, Position $position){
+    public function sendNoDeviceNearPosition(Device $device, Position $position, $confirmed = true){
         $last = $this->getLastMessage(array('object' => $position->getObject(), 'position' => $position, 'device' => $device, 'action' => 'alert_in_move'));
         
         if($last && time()-$last->getDateCreated()->getTimestamp() < self::CRITICAL_RETRY){
@@ -35,7 +35,9 @@ class DeviceNotificator{
         
         $this->send($device, 'alert_in_move', array(
             'parameters' => array(
-                'message' => sprintf('Object %s is in the move and noone is near it!', $position->getObject()->getName()),
+                'message' => $confirmed ? 
+                                sprintf('Object %s is in the move and no device is near it!', $position->getObject()->getName()) : 
+                                sprintf('Can\'t confirm position of all devices. Assumed that object %s is in the move.', $position->getObject()->getName()),
                 'type' => 'critical'
                 )
             ),
